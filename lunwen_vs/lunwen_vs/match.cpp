@@ -52,9 +52,9 @@ Uint32 getFeat(Uint8* img, Feat* zFeat,
 	Int32*      img_Iy          = (Int32*) calloc_check (fullSize, sizeof(Int32));
 	Int32*      img_Ixy         = (Int32*) calloc_check (fullSize, sizeof(Int32));
 
-	Int32*      img_Ix_out      = (Int32*) calloc_check (fullSize, sizeof(Int32));
-	Int32*      img_Iy_out      = (Int32*) calloc_check (fullSize, sizeof(Int32));
-	Int32*      img_Ixy_out     = (Int32*) calloc_check (fullSize, sizeof(Int32));
+	F32*      img_Ix_out      = (F32*) calloc_check (fullSize, sizeof(F32));
+	F32*      img_Iy_out      = (F32*) calloc_check (fullSize, sizeof(F32));
+	F32*      img_Ixy_out     = (F32*) calloc_check (fullSize, sizeof(F32));
 
 	Uint8*      img_Mark        = (Uint8*) calloc_check (fullSize, sizeof(Uint8));
 

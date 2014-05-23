@@ -18,6 +18,8 @@ typedef unsigned int            Uint32;
 typedef int                     Int32;
 typedef unsigned long long      Uint64;
 typedef long long               Int64;
+typedef float					F32;
+typedef double					F64;
 
 
 

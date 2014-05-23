@@ -10,6 +10,8 @@
 
 
 int main () {
+	printf("%d", sizeof(float));
+
 	// Variables definition and Memory allocation
 	cv::Mat imgL = cv::imread ("G:/Pics/Images/view1_gray.jpg", cv::IMREAD_GRAYSCALE);
 	cv::Mat imgR = cv::imread ("G:/Pics/Images/view5_gray.jpg", cv::IMREAD_GRAYSCALE);
