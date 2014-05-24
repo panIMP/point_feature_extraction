@@ -2,6 +2,8 @@
 #include <math.h>
 #include "harris.h"
 
+#include <opencv2\core\core.hpp>
+#include <opencv2\highgui\highgui.hpp>
 
 
 void drawCross (Uint8* img, Uint8* img_Mark, Uint8 len, Int16 width, Int16 height) {
@@ -52,9 +54,9 @@ Uint32 getFeat(Uint8* img, Feat* zFeat,
 	Int32*      img_Iy          = (Int32*) calloc_check (fullSize, sizeof(Int32));
 	Int32*      img_Ixy         = (Int32*) calloc_check (fullSize, sizeof(Int32));
 
-	F32*      img_Ix_out      = (F32*) calloc_check (fullSize, sizeof(F32));
-	F32*      img_Iy_out      = (F32*) calloc_check (fullSize, sizeof(F32));
-	F32*      img_Ixy_out     = (F32*) calloc_check (fullSize, sizeof(F32));
+	F32*      img_Ix_out		= (F32*) calloc_check (fullSize, sizeof(F32));
+	F32*      img_Iy_out		= (F32*) calloc_check (fullSize, sizeof(F32));
+	F32*      img_Ixy_out		= (F32*) calloc_check (fullSize, sizeof(F32));
 
 	Uint8*      img_Mark        = (Uint8*) calloc_check (fullSize, sizeof(Uint8));
 
@@ -62,6 +64,8 @@ Uint32 getFeat(Uint8* img, Feat* zFeat,
 	/*--------------------- Processing -----------------------*/
 	// step 1 -- generate the gradient image
 	gradImage (img, img_Ix, img_Iy, img_Ixy, width, height);
+	cv::Mat img_Ix_Mat = cv::Mat(height, width, CV_32SC1, img_Ix);
+	cv::imwrite("G:/Pics/Results/view1_Ix_2.jpg", img_Ix_Mat);
 
 
 	// step 2 -- guassin blur the gradient image

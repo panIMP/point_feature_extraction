@@ -16,7 +16,6 @@ int main () {
 	cv::Mat imgL = cv::imread ("G:/Pics/Images/view1_gray.jpg", cv::IMREAD_GRAYSCALE);
 	cv::Mat imgR = cv::imread ("G:/Pics/Images/view5_gray.jpg", cv::IMREAD_GRAYSCALE);
 
-
 	Int16 tarPNumL = 100;
 	Int16 tarPNumR = 100;
 	Int16 actPNumL, actPNumR;

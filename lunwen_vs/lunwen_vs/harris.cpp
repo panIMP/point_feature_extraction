@@ -4,9 +4,9 @@
 
 void gradImage(Uint8 *img, Int32 *img_Ix, Int32 *img_Iy, Int32 *img_Ixy, Int16 width, Int16 height)
 {
-	Int32 i;
-	Int32 affectSize = width * (height - 2) - 2;
-	Int32 width2 = width * 2;
+	Int16 i, j;
+	Int16 iEnd = width - 1;
+	Int16 jEnd = height - 1;
 
 	Uint8 p00, p01, p02;
 	Uint8 p10, p11, p12;
@@ -14,27 +14,39 @@ void gradImage(Uint8 *img, Int32 *img_Ix, Int32 *img_Iy, Int32 *img_Ixy, Int16 w
 
 	Int32 Ix, Iy, Ixy;
 
-	for (i = 0; i < affectSize; ++i) {
-		// Fetch 3X3 neighbour pixels
-		p00 = img[i];            p01 = img[i + 1];            p02 = img[i + 2];
-		p10 = img[i + width];    p11 = img[i + width + 1];    p12 = img[i + width + 2];
-		p20 = img[i + width2];   p21 = img[i + width2 + 1];   p22 = img[i + width2 + 2];
+	Int32 upLineOut = 1;
+	Int32 midLineOut = width + 1;
+	Int32 downLineOut = 2 * width + 1;
 
-		// Calculate the gradient
-		Ix = -p00 + p02
-			- p10 + p12
-			- p20 + p22;
+	for (j = 1; j <= jEnd; ++j, upLineOut += width, midLineOut += width, downLineOut += width) 
+	{
+		Int32 upLineIn = upLineOut;
+		Int32 midLineIn = midLineOut;
+		Int32 downLineIn = downLineOut;
 
-		Iy = -p00 - p01 - p11
+		for (i = 1; i <= iEnd; ++i, ++upLineIn, ++midLineIn, ++downLineIn) 
+		{
+			// Fetch 3X3 neighbour pixels
+			p00 = img[upLineIn - 1];		p01 = img[upLineIn];		p02 = img[upLineIn + 1];
+			p10 = img[midLineIn - 1];		p11 = img[midLineIn];		p12 = img[midLineIn + 1];
+			p20 = img[downLineIn - 1];		p21 = img[downLineIn];		p22 = img[downLineIn + 1];
 
-			+ p20 + p21 + p22;
+			// Calculate the gradient
+			Ix = -p00 + p02
+				- p10 + p12
+				- p20 + p22;
 
-		Ixy = Ix * Iy;
+			Iy = -p00 - p01 - p11
 
-		// Store it.
-		img_Ix[i + width + 1] = Ix;
-		img_Iy[i + width + 1] = Iy;
-		img_Ixy[i + width + 1] = Ixy;
+				+ p20 + p21 + p22;
+
+			Ixy = Ix * Iy;
+
+			// Store it.
+			img_Ix[midLineIn] = Ix;
+			img_Iy[midLineIn] = Iy;
+			img_Ixy[midLineIn] = Ixy;
+		}
 	}
 }
 
