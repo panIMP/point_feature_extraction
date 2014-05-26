@@ -80,10 +80,10 @@ int main () {
 
 
 	// Save results
-	cv::imwrite ("G:/Pics/Results/L.jpg", imgL);
-	cv::imwrite ("G:/Pics/Results/R.jpg", imgR);
-	cv::imwrite ("G:/Pics/Results/LR.jpg", imgLR);
-	cv::imwrite ("G:/Pics/Results/LRMark.jpg", imgLR_Mark);
+	cv::imwrite ("G:/Pics/Results/L_master.jpg", imgL);
+	cv::imwrite ("G:/Pics/Results/R_master.jpg", imgR);
+	cv::imwrite ("G:/Pics/Results/LR_master.jpg", imgLR);
+	cv::imwrite ("G:/Pics/Results/LRMark_master.jpg", imgLR_Mark);
 
 
 	return 0;
