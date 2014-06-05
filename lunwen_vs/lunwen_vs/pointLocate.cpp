@@ -1,4 +1,4 @@
-#include "harris.h"
+#include "pointLocate.h"
 #include "stdfuncs.h"
 
 
@@ -93,144 +93,49 @@ guassin(Int32* inPtr, F32* outPtr, Int16 width, Int16 height)
 }
 
 
+void 
+drawCross(Uint8* img, Uint8* img_Mark, Uint8 len, Int16 width, Int16 height) 
+{
+	Int32 i, j, k;
+
+	Int16 x, y;
+
+	Int32 startPoint = width * len + len;
+	Int32 endPoint = width * (height - len) - len;
+
+	img_Mark += startPoint;
+	for (k = startPoint; k < endPoint; ++k) {
+		if (*img_Mark++ == 0)
+			continue;
+
+		x = k % width;
+		y = k / width;
+
+		for (i = x - len; i < x + len; ++i) {
+			*(img + y * width + i) = 255;
+		}
+
+		for (j = y - len; j < y + len; ++j) {
+			*(img + j * width + x) = 255;
+		}
+	}
+}
+
+
 Uint32
-harris(F32 *img_Ix, F32 *img_Iy, F32 *img_Ixy, Uint8 *img_Mark, Int16 width, Int16 height, Int32 tarPointNum)
+harris(Uint8* img, F32 *img_Ix, F32 *img_Iy, F32 *img_Ixy, Uint8 *img_Mark, Int16 width, Int16 height, Int32 tarPointNum)
 {
 	// Memory allcation
-	/*Int32 i;
-	Int32 fullSize = width * height;
-	Int32 startPoint = width + 1;
-	Int32 endPoint = width * (height - 1) - 1;
-
-	Uint32* histBins_cim = (Uint32*)calloc_check(3 * 255 * 3 * 255 / 2, sizeof(Uint32));
-	Int32* inPtr_cim = (Int32*)calloc_check(fullSize, sizeof(Int32));
-	Int64 cim, cimMax, cimThresh;
-	Uint32 cimNumSum;
-
-	Uint32 curPointNum = 0;
-
-	F32 Ix00, Ix01, Ix02;
-	F32 Ix10, Ix11, Ix12;
-	F32 Ix20, Ix21, Ix22;
-
-	F32 Iy00, Iy01, Iy02;
-	F32 Iy10, Iy11, Iy12;
-	F32 Iy20, Iy21, Iy22;
-
-	F32 Ixy;
-
-
-	// Grad mode value and tan value
-	F32 I;
-	F32 tan;
-
-
-	// Calculate the hist bin of cim and cim max value
-	cimMax = 0;
-	for (i = startPoint; i < endPoint; ++i) {
-	// fetch neighbour 3X3 pixels
-	Ix00 = img_Ix[i - width - 1]; 		Ix01 = img_Ix[i - width]; 	Ix02 = img_Ix[i - width + 1];
-	Ix10 = img_Ix[i - 1];				Ix11 = img_Ix[i];			Ix12 = img_Ix[i + 1];
-	Ix20 = img_Ix[i + width - 1];		Ix21 = img_Ix[i + width]; 	Ix22 = img_Ix[i + width + 1];
-
-	Iy00 = img_Iy[i - width - 1]; 		Iy01 = img_Iy[i - width]; 	Iy02 = img_Iy[i - width + 1];
-	Iy10 = img_Iy[i - 1];				Iy11 = img_Iy[i];			Iy12 = img_Iy[i + 1];
-	Iy20 = img_Iy[i + width - 1];		Iy21 = img_Iy[i + width]; 	Iy22 = img_Iy[i + width + 1];
-
-	I = Ix11 * Ix11 + Iy11 * Iy11;
-
-	// non-maximum suppression -- mark extreme points
-	tan = Iy11  / (Ix11 + 0.00001f);
-
-	if (tan > 1.0 && tan <= 2.0) {
-	if ((I > (Ix02*Ix02 + Iy02*Iy02)) && (I > (Ix20*Ix20 + Iy20*Iy20))) {
-	img_Mark[i] = 255;
-	}
-	}
-	else if (tan > 2.0 || tan <= -2.0) {
-	if ((I > (Ix01*Ix01 + Iy01*Iy01)) && (I > (Ix21*Ix21 + Iy21*Iy21))) {
-	img_Mark[i] = 255;
-	}
-	}
-	else if (tan > -2.0 && tan <= -1.0) {
-	if ((I > (Ix00*Ix00 + Iy00*Iy00)) && (I > (Ix22*Ix22 + Iy22*Iy22))) {
-	img_Mark[i] = 255;
-	}
-	}
-	else if (tan > -1.0 && tan <= 1.0) {
-	if ((I > (Ix10*Ix10 + Iy10*Iy10)) && (I > (Ix12*Ix12 + Iy12*Iy12))) {
-	img_Mark[i] = 255;
-	}
-	}
-
-	// cim and cim-hist calculation
-	Ixy = img_Ixy[i];
-	cim = (Int64)((Ix11 * Ix11 * Iy11 * Iy11 - Ixy * Ixy) / (I + 0.00001));
-
-	if (cim < 0) {
-	continue;
-	}
-
-	if (cim > cimMax) {
-	cimMax = cim;
-	}
-
-	histBins_cim[cim] ++;
-	inPtr_cim[i] = (Int32)cim;
-	}
-
-
-	// Get extreme points by number thresh -- the top 2000 biggest cim value points
-	cimThresh = 0;
-	cimNumSum = 0;
-	for (i = (Int32)cimMax; i >= 0; --i) {
-	cimNumSum += histBins_cim[i];
-
-	// extremePointThresh extreme points are needed
-	if (cimNumSum >= tarPointNum) {
-	cimThresh = i;
-	break;
-	}
-	}
-
-
-	// Thresh suppression -- exclude un-extreme points
-	curPointNum = 0;
-	for (i = startPoint; i < endPoint; ++i) {
-	if (img_Mark[i] == 0) {
-	continue;
-	}
-
-	if (inPtr_cim[i] < cimThresh) {
-	img_Mark[i] = 0;
-	continue;
-	}
-
-	printf_simplify("Extreme point %d: x: %4d, y: %4d\n", curPointNum, i % width, i / width);
-
-	curPointNum++;
-	}
-
-	printf_detailed("Set point num target: %d, get point: %d\n", tarPointNum, curPointNum);
-
-
-	// Free memory
-	free(histBins_cim);
-	free(inPtr_cim);
-
-
-	return curPointNum;*/
-
-	// Memory allcation
-	Int16 i, j;
-	Int16 iEnd = width - 1;
-	Int16 jEnd = height - 1;
+	Int32 i, j;
+	Int32 iEnd = width - 1;
+	Int32 jEnd = height - 1;
 	Int32 fullSize = width * height;
 
 	Int32 cim, cimMax, cimThresh;
 
 	Int32 cimNumSum;
-	Int32* hist_cim = (Int32*)calloc_check(3 * 255 * 3 * 255 / 2, sizeof(Int32));	
+	Int32 cimRestrcitMax = 255 * 3 * 255 * 3;
+	Int32* hist_cim = (Int32*)calloc_check(cimRestrcitMax + 1, sizeof(Int32));
 	Int32* img_cim = (Int32*)calloc_check(fullSize, sizeof(Int32));
 
 	Int32 curPointNum = 0;
@@ -244,7 +149,6 @@ harris(F32 *img_Ix, F32 *img_Iy, F32 *img_Ixy, Uint8 *img_Mark, Int16 width, Int
 	F32 Iy20, Iy21, Iy22;
 
 	F32 Ixy;
-
 
 	// Grad mode value and tan value
 	F32 I;
@@ -275,6 +179,27 @@ harris(F32 *img_Ix, F32 *img_Iy, F32 *img_Ixy, Uint8 *img_Mark, Int16 width, Int
 			Iy20 = img_Iy[downLineIn - 1];		Iy21 = img_Iy[downLineIn]; 		Iy22 = img_Iy[downLineIn + 1];
 
 			I = Ix11 * Ix11 + Iy11 * Iy11;
+
+			// cim and cim-hist calculation
+			Ixy = img_Ixy[midLineIn];
+			cim = (Ix11 * Ix11 * Iy11 * Iy11 - Ixy * Ixy) / (I + 0.000001f);
+
+			if (cim < 0) {
+				continue;
+				//cim = -cim;
+			}
+
+			if (cim > cimRestrcitMax)
+			{
+				cim = cimRestrcitMax;
+			}
+
+			if (cim > cimMax) {
+				cimMax = cim;
+			}
+
+			hist_cim[cim] ++;
+			img_cim[midLineIn] = cim;
 
 			// non-maximum suppression -- mark extreme points
 			tan = Iy11 / (Ix11 + 0.000001f);
@@ -307,21 +232,6 @@ harris(F32 *img_Ix, F32 *img_Iy, F32 *img_Ixy, Uint8 *img_Mark, Int16 width, Int
 					img_Mark[midLineIn] = 255;
 				}
 			}
-
-			// cim and cim-hist calculation
-			Ixy = img_Ixy[midLineIn];
-			cim = (Ix11 * Ix11 * Iy11 * Iy11 - Ixy * Ixy) / (I + 0.00001f);
-
-			if (cim < 0) {
-				continue;
-			}
-
-			if (cim > cimMax) {
-				cimMax = cim;
-			}
-
-			hist_cim[cim] ++;
-			img_cim[midLineIn] = cim;
 		}
 	}
 
@@ -364,8 +274,11 @@ harris(F32 *img_Ix, F32 *img_Iy, F32 *img_Ixy, Uint8 *img_Mark, Int16 width, Int
 			curPointNum++;
 		}
 	}
-
 	printf_detailed("Set point num target: %d, get point: %d\n", tarPointNum, curPointNum);
+
+
+	/*------------------- Image Copy back ---------------------*/
+	drawCross(img, img_Mark, 5, width, height);
 
 
 	// Free memory
@@ -375,3 +288,4 @@ harris(F32 *img_Ix, F32 *img_Iy, F32 *img_Ixy, Uint8 *img_Mark, Int16 width, Int
 
 	return curPointNum;
 }
+

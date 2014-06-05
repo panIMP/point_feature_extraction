@@ -24,3 +24,8 @@ Version log
 2.0
 1) Transplant to vs2012 platform
 2) Use opencv to implement image load and display
+
+2.1
+1) int to double 
+2) fix some bugs
+3) cim can be negative

@@ -18,16 +18,16 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="harris.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="zernike.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="match.cpp">
+    <ClCompile Include="stdfuncs.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="stdfuncs.cpp">
+    <ClCompile Include="pointLocate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="pointMatch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,19 +35,19 @@
     <ClInclude Include="stdtypes.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="harris.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="zernike.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="match.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stdfuncs.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pointLocate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pointMatch.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
