@@ -12,6 +12,7 @@ std::string mergeImgStr
 {
 	cv::Mat leftImg = cv::imread(leftImgStr, cv::IMREAD_GRAYSCALE);
 	cv::Mat rightImg = cv::imread(rightImgStr, cv::IMREAD_GRAYSCALE);
+
 	std::pair<cv::Mat, cv::Mat> imgPair = std::make_pair(leftImg, rightImg);
 
 	cv::Size size(leftImg.cols + rightImg.cols, MAX(leftImg.rows, rightImg.rows));
@@ -68,7 +69,7 @@ short height
 		}
 	}
 
-	std::cout << pointNum << " interest points has been detected" << std::endl;
+	//std::cout << pointNum << " interest points has been detected" << std::endl;
 }
 
 
