@@ -36,6 +36,7 @@ displayResult
 std::pair<cv::Mat, cv::Mat> imgPair,
 std::pair<unsigned char*, unsigned char*> imgMarkPair,
 pMatchCouple couple,
+int actPNumL,
 std::string leftResultStr,
 std::string rightResultStr,
 std::string mergeResultStr

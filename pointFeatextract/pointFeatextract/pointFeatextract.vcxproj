@@ -68,6 +68,7 @@
     <ClInclude Include="pointLocate.h" />
     <ClInclude Include="pointMatch.h" />
     <ClInclude Include="stdfunc.h" />
+    <ClInclude Include="zernike.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imageIO.cpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="pointLocate.cpp" />
     <ClCompile Include="pointMatch.cpp" />
     <ClCompile Include="stdfunc.cpp" />
+    <ClCompile Include="zernike.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

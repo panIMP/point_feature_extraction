@@ -79,6 +79,7 @@ displayResult
 std::pair<cv::Mat, cv::Mat> imgPair,
 std::pair<unsigned char*, unsigned char*> imgMarkPair,
 pMatchCouple couple,
+int actPNumL,
 std::string leftResultStr,
 std::string rightResultStr,
 std::string mergeResultStr
@@ -97,18 +98,18 @@ std::string mergeResultStr
 	cv::cvtColor(leftResult, leftMergeResult, CV_GRAY2BGR);
 	cv::cvtColor(rightResult, rightMergeResult, CV_GRAY2BGR);
 
-	/*for (Int32 i = 0; i < actPNumL; i += 3) {
-	cv::line(imgLR_Mark, cv::Point(pairs[i].L_i_x, pairs[i].L_i_y),
-	cv::Point(pairs[i].R_j_x + imgL.cols, pairs[i].R_j_y), cv::Scalar(255, 0, 0));
+	for (int i = 0; i < actPNumL; i += 3) {
+		cv::line(mergeResult, cv::Point(couple[i].Lx, couple[i].Ly),
+			cv::Point(couple[i].Rx + leftMergeResult.cols, couple[i].Ry), cv::Scalar(255, 0, 0));
 	}
-	for (Int32 i = 1; i < actPNumL; i += 3) {
-	cv::line(imgLR_Mark, cv::Point(pairs[i].L_i_x, pairs[i].L_i_y),
-	cv::Point(pairs[i].R_j_x + imgL.cols, pairs[i].R_j_y), cv::Scalar(0, 255, 0));
+	for (int i = 1; i < actPNumL; i += 3) {
+		cv::line(mergeResult, cv::Point(couple[i].Lx, couple[i].Ly),
+			cv::Point(couple[i].Rx + leftMergeResult.cols, couple[i].Ry), cv::Scalar(0, 255, 0));
 	}
-	for (Int32 i = 2; i < actPNumL; i += 3) {
-	cv::line(imgLR_Mark, cv::Point(pairs[i].L_i_x, pairs[i].L_i_y),
-	cv::Point(pairs[i].R_j_x + imgL.cols, pairs[i].R_j_y), cv::Scalar(0, 0, 255));
-	}*/
+	for (int i = 2; i < actPNumL; i += 3) {
+		cv::line(mergeResult, cv::Point(couple[i].Lx, couple[i].Ly),
+			cv::Point(couple[i].Rx + leftMergeResult.cols, couple[i].Ry), cv::Scalar(0, 0, 255));
+	}
 
 	// Save results
 	cv::imwrite(leftResultStr, leftResult);

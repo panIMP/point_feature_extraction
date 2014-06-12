@@ -6,49 +6,49 @@
 
 
 /*Template to generate hessin pyramids*/
-const int g_hessin_template[2 * 4 *3 * 25] = 
+const int g_hessin_template[2 * 4 *3 * 26] = 
 {
 	/*1st octave*/
 	// 9 * 9
-	3, 0, 2,  2,  6,  15, 1,  3,  2, 5,   6,  15, -2,  6,  2,  8,  6,  15,  1,  0,  0,  0,  0,   0, 0,
-	3, 2, 0,  6,  2,  15, 1,  2,  3, 6,   5,  15, -2,  2,  6,  6,  8,  15,  1,  0,  0,  0,  0,   0, 0,
-	4, 1, 1,  3,  3,   9, 1,  5,  1, 7,   3,   9, -1,  1,  5,  3,  7,   9, -1,  5,  5,  7,  7,   9, 1,
+	3, 0, 2,  2,  6,  15, 1,  3,  2, 5,   6,  15, -2,  6,  2,  8,  6,  15,  1,  0,  0,  0,  0,   0, 0, 1.2,
+	3, 2, 0,  6,  2,  15, 1,  2,  3, 6,   5,  15, -2,  2,  6,  6,  8,  15,  1,  0,  0,  0,  0,   0, 0, 1.2,
+	4, 1, 1,  3,  3,   9, 1,  5,  1, 7,   3,   9, -1,  1,  5,  3,  7,   9, -1,  5,  5,  7,  7,   9, 1, 1.2,
 
 	// 15 * 15
-	3, 0, 3,  4, 11,  45, 1,  5,  3,  9, 11,  45, -2, 10,  3, 14, 11,  45,  1,  0,  0,  0,  0,   0, 0,
-	3, 3, 0, 11,  4,  45, 1,  3,  5, 11,  9,  45, -2,  3, 10, 11, 14,  45,  1,  0,  0,  0,  0,   0, 0,
-	4, 2, 2,  6,  6,  25, 1,  8,  2, 12,  6,  25, -1,  2,  8,  6, 12,  25, -1,  8,  8, 12, 12,  25, 1,
+	3, 0, 3,  4, 11,  45, 1,  5,  3,  9, 11,  45, -2, 10,  3, 14, 11,  45,  1,  0,  0,  0,  0,   0, 0, 2.0,
+	3, 3, 0, 11,  4,  45, 1,  3,  5, 11,  9,  45, -2,  3, 10, 11, 14,  45,  1,  0,  0,  0,  0,   0, 0, 2.0,
+	4, 2, 2,  6,  6,  25, 1,  8,  2, 12,  6,  25, -1,  2,  8,  6, 12,  25, -1,  8,  8, 12, 12,  25, 1, 2.0,
 
 	// 21 * 21
-	3, 0, 4,  6, 16,  91, 1,  7,  4, 13, 16,  91, -2, 14,  4, 20, 16,  91,  1,  0,  0,  0,  0,   0, 0,
-	3, 4, 0, 16,  6,  91, 1,  4,  7, 16, 13,  91, -2,  4, 14, 16, 20,  91,  1,  0,  0,  0,  0,   0, 0,
-	4, 3, 3,  9,  9,  49, 1, 11,  3, 17,  9,  49, -1,  3, 11,  9, 17,  49, -1, 11, 11, 17, 17,  49, 1,
+	3, 0, 4,  6, 16,  91, 1,  7,  4, 13, 16,  91, -2, 14,  4, 20, 16,  91,  1,  0,  0,  0,  0,   0, 0, 2.8,
+	3, 4, 0, 16,  6,  91, 1,  4,  7, 16, 13,  91, -2,  4, 14, 16, 20,  91,  1,  0,  0,  0,  0,   0, 0, 2.8,
+	4, 3, 3,  9,  9,  49, 1, 11,  3, 17,  9,  49, -1,  3, 11,  9, 17,  49, -1, 11, 11, 17, 17,  49, 1, 2.8,
 
 	// 27 * 27
-	3, 0, 5,  8, 21, 153, 1,  9,  5, 17, 21, 153, -2, 18,  5, 26, 21, 153,  1,  0,  0,  0,  0,   0, 0,
-	3, 5, 0, 21,  8, 153, 1,  5,  9, 21, 17, 153, -2,  5, 18, 21, 26, 153,  1,  0,  0,  0,  0,   0, 0,
-	4, 4, 4, 12, 12,  81, 1, 14,  4, 22, 12,  81, -1,  4, 14, 12, 22,  81, -1, 14, 14, 22, 22,  81, 1, 
+	3, 0, 5,  8, 21, 153, 1,  9,  5, 17, 21, 153, -2, 18,  5, 26, 21, 153,  1,  0,  0,  0,  0,   0, 0, 3.6,
+	3, 5, 0, 21,  8, 153, 1,  5,  9, 21, 17, 153, -2,  5, 18, 21, 26, 153,  1,  0,  0,  0,  0,   0, 0, 3.6,
+	4, 4, 4, 12, 12,  81, 1, 14,  4, 22, 12,  81, -1,  4, 14, 12, 22,  81, -1, 14, 14, 22, 22,  81, 1, 3.6,
 
 	/*2nd octave*/
 	// 15 * 15
-	3, 0, 3,  4, 11,  45, 1,  5,  3,  9, 11,  45, -2, 10,  3, 14, 11,  45,  1,  0,  0,  0,  0,   0, 0,
-	3, 3, 0, 11,  4,  45, 1,  3,  5, 11,  9,  45, -2,  3, 10, 11, 14,  45,  1,  0,  0,  0,  0,   0, 0,
-	4, 2, 2,  6,  6,  25, 1,  8,  2, 12,  6,  25, -1,  2,  8,  6, 12,  25, -1,  8,  8, 12, 12,  25, 1,
+	3, 0, 3,  4, 11,  45, 1,  5,  3,  9, 11,  45, -2, 10,  3, 14, 11,  45,  1,  0,  0,  0,  0,   0, 0, 2.0,
+	3, 3, 0, 11,  4,  45, 1,  3,  5, 11,  9,  45, -2,  3, 10, 11, 14,  45,  1,  0,  0,  0,  0,   0, 0, 2.0,
+	4, 2, 2,  6,  6,  25, 1,  8,  2, 12,  6,  25, -1,  2,  8,  6, 12,  25, -1,  8,  8, 12, 12,  25, 1, 2.0,
 
 	// 27 * 27
-	3, 0, 5,  8, 21, 153, 1,  9,  5, 17, 21, 153, -2, 18,  5, 26, 21, 153,  1,  0,  0,  0,  0,   0, 0,
-	3, 5, 0, 21,  8, 153, 1,  5,  9, 21, 17, 153, -2,  5, 18, 21, 26, 153,  1,  0,  0,  0,  0,   0, 0,
-	4, 4, 4, 12, 12,  81, 1, 14,  4, 22, 12,  81, -1,  4, 14, 12, 22,  81, -1, 14, 14, 22, 22,  81, 1, 
+	3, 0, 5,  8, 21, 153, 1,  9,  5, 17, 21, 153, -2, 18,  5, 26, 21, 153,  1,  0,  0,  0,  0,   0, 0, 3.6,
+	3, 5, 0, 21,  8, 153, 1,  5,  9, 21, 17, 153, -2,  5, 18, 21, 26, 153,  1,  0,  0,  0,  0,   0, 0, 3.6,
+	4, 4, 4, 12, 12,  81, 1, 14,  4, 22, 12,  81, -1,  4, 14, 12, 22,  81, -1, 14, 14, 22, 22,  81, 1, 3.6,
 
 	// 39 * 39
-	3, 0, 7, 12, 31, 325, 1, 13,  7, 25, 31, 325, -2, 26,  7, 38, 31, 325,  1,  0,  0,  0,  0,   0, 0,
-	3, 7, 0, 31, 12, 325, 1,  7, 13, 31, 25, 325, -2,  7, 26, 31, 28, 325,  1,  0,  0,  0,  0,   0, 0,
-	4, 6, 6, 18, 18, 169, 1, 20,  6, 32, 18, 169, -1,  6, 20, 18, 32, 169, -1, 20, 20, 32, 32, 169, 1,
+	3, 0, 7, 12, 31, 325, 1, 13,  7, 25, 31, 325, -2, 26,  7, 38, 31, 325,  1,  0,  0,  0,  0,   0, 0, 5.2,
+	3, 7, 0, 31, 12, 325, 1,  7, 13, 31, 25, 325, -2,  7, 26, 31, 28, 325,  1,  0,  0,  0,  0,   0, 0, 5.2,
+	4, 6, 6, 18, 18, 169, 1, 20,  6, 32, 18, 169, -1,  6, 20, 18, 32, 169, -1, 20, 20, 32, 32, 169, 1, 5.2,
 
 	// 51 * 51
-	3, 0, 9, 16, 41, 561, 1, 17,  9, 33, 41, 561, -2, 34,  9, 50, 41, 561,  1,  0,  0,  0,  0,   0, 0,
-	3, 9, 0, 41, 16, 561, 1,  9, 17, 41, 33, 561, -2,  9, 34, 41, 50, 561,  1,  0,  0,  0,  0,   0, 0,
-	4, 8, 8, 24, 24, 289, 1, 26,  8, 42, 24, 289, -1,  8, 26, 24, 42, 289, -1, 26, 26, 42, 42, 289, 1, 
+	3, 0, 9, 16, 41, 561, 1, 17,  9, 33, 41, 561, -2, 34,  9, 50, 41, 561,  1,  0,  0,  0,  0,   0, 0, 6.8,
+	3, 9, 0, 41, 16, 561, 1,  9, 17, 41, 33, 561, -2,  9, 34, 41, 50, 561,  1,  0,  0,  0,  0,   0, 0, 6.8,
+	4, 8, 8, 24, 24, 289, 1, 26,  8, 42, 24, 289, -1,  8, 26, 24, 42, 289, -1, 26, 26, 42, 42, 289, 1, 6.8,
 };
 
 
@@ -104,6 +104,13 @@ int height
 }
 
 
+/*Calculate thresh for edge suppression*/
+static double calcEdgeSupprThresh(double r)
+{
+	return ((r + 1.0) * (r + 1.0) / r);
+}
+
+
 /*Generate the hessin-pyramid*/
 void
 createHessinPyramid
@@ -114,6 +121,7 @@ double* imgHesPyr,
 int octaveNum,
 int layerNum,
 const int* hesTempl,
+unsigned char* imgMark,
 int width,
 int height
 )
@@ -123,7 +131,7 @@ int height
 		for (int lay = 0; lay < layerNum; ++lay)
 		{
 			// Corner point coordinates of the 3 rects in Lxx image
-			int startPos = oct * layerNum * 3 * 25 + lay * 3 * 25;
+			int startPos = oct * layerNum * 3 * 26 + lay * 3 * 26;
 
 			int xStart = (hesTempl[startPos + 7] + hesTempl[startPos + 9]) / 2;
 			int yStart = (hesTempl[startPos + 8] + hesTempl[startPos + 10]) / 2;
@@ -152,7 +160,7 @@ int height
 			int wxx3 = hesTempl[startPos + 18];
 
 			// Corner point coordinates of the 3 rects in Lyy image
-			startPos += 25;
+			startPos += 26;
 
 			int pyy11 = hesTempl[startPos + 2] * width + hesTempl[startPos + 1];
 			int pyy12 = hesTempl[startPos + 2] * width + hesTempl[startPos + 3];
@@ -176,7 +184,7 @@ int height
 			int wyy3 = hesTempl[startPos + 18];
 
 			// Corner point coordinates of the 4 rects in Lxy(Lyx) image
-			startPos += 25;
+			startPos += 26;
 
 			int pxy11 = hesTempl[startPos + 2] * width + hesTempl[startPos + 1];
 			int pxy12 = hesTempl[startPos + 2] * width + hesTempl[startPos + 3];
@@ -230,6 +238,15 @@ int height
 
 					// normally sxx1 == sxx2 == sxx3 == sxx4, the others are the same.
 					imgHesPyr[pixelPos] = (lxx / sxx1) * (lyy / syy1) - (0.9 * lxy / sxy1)*(0.9 * lxy / sxy1);
+
+					double trH = lxx + lyy;
+					double detH = lxx * lyy - lxy * lxy;
+					static double thresh = calcEdgeSupprThresh(10.0);
+
+					if ((trH * trH) / detH > thresh)
+					{
+						imgMark[y * width + x] = 1;
+					}
 				}
 			}
 		}
@@ -251,6 +268,11 @@ int width,
 int height
 )
 {
+	double* A = (double*)calloc_check(9, sizeof(double));
+	double* B = (double*)calloc_check(3, sizeof(double));
+	double* result = (double*)calloc_check(3, sizeof(double));
+	int imgSize = width * height;
+
 	for (int oct = 0; oct < octaveNum; ++oct)
 	{
 		for (int lay = 1; lay < layerNum - 1; ++lay)
@@ -259,7 +281,7 @@ int height
 			double* imgMid = imgHesPyr + oct * layerNum * width * height + lay * width * height;
 			double* imgDown = imgHesPyr + oct * layerNum * width * height + (lay + 1) * width * height;
 
-			int startPos = oct * layerNum * 3 * 25 + lay * 3 * 25;
+			int startPos = oct * layerNum * 3 * 26 + lay * 3 * 26;
 
 			int xStart = (hesTempl[startPos + 7] + hesTempl[startPos + 9]) / 2;
 			int yStart = (hesTempl[startPos + 8] + hesTempl[startPos + 10]) / 2;
@@ -309,9 +331,39 @@ int height
 						&& (pMid11 > pUp11) && (pMid11 > pUp12) && (pMid11 > pUp20) && (pMid11 > pUp21)&& (pMid11 > pUp22) 
 						&& (pMid11 > pDown00) && (pMid11 > pDown01) && (pMid11 > pDown02) && (pMid11 > pDown10) && (pMid11 > pDown11) && (pMid11 > pDown12) && (pMid11 > pDown20) && (pMid11 > pDown21) && (pMid11 > pDown22))
 					{
-						imgMark[secondLine + 1] = 255;
-					}
+						/*A[0] = pMid10 + pMid12 - 2 * pMid11;
+						A[1] = (pMid00 + pMid22 - pMid02 - pMid20) / 4;
+						A[2] = (pUp10 + pDown12 - pUp12 - pDown10) / 4;
+						A[3] = A[1];
+						A[4] = pMid01 + pMid21 - 2 * pMid11;
+						A[5] = (pUp12 + pDown21 - pUp21 - pDown12) / 4;
+						A[6] = A[2];
+						A[7] = A[5];
+						A[8] = pUp11 + pDown11 - 2 * pMid11;
 
+						B[0] = -(pMid12 - pMid10) / 2;
+						B[1] = -(pMid21 - pMid01) / 2;
+						B[2] = -(pDown11 - pUp11) / 2;
+
+						solve3_3(A, B, result);
+
+						double realX = result[0];
+						double realY = result[1];
+						double realSigma = result[2];
+						int realPos = (int)(realY * width + realX);
+						if (realPos < 0)
+							realPos = 0;
+						else if (realPos >= imgSize)
+							realPos = imgSize - 1;
+
+						imgMark[realPos] = 255;*/
+
+						imgMark[secondLine] = 255;
+					}
+					else
+					{
+						imgMark[secondLine] = 0;
+					}
 				}
 			}
 		}
@@ -342,8 +394,8 @@ unsigned char* imgMark
 int
 surf
 (
-cv::Mat& img,
-cv::Mat& imgMark,
+cv::Mat& imgMat,
+cv::Mat& imgMarkMat,
 int width,
 int height,
 int octaveNum,
@@ -354,20 +406,43 @@ const int* hesTempl
 	int fullSize = width * height;
 
 	/*Memory allocation*/
+	unsigned char* img = imgMat.data;
+	unsigned char* imgMark = imgMarkMat.data;
+	unsigned char* imgMarkTmp = (unsigned char*)calloc_check(fullSize, sizeof(unsigned char));
 	double* imgInt = (double*)calloc_check(fullSize, sizeof(double));
 	double* imgHesPyr = (double*)calloc_check(fullSize * octaveNum * layerNum, sizeof(double));
+	double* imgHesPtr = imgHesPyr;
+	for (int oct = 0; oct < octaveNum; ++oct)
+	{
+		for (int lay = 0; lay < layerNum; ++lay)
+		{
+			for (int i = 0; i < fullSize; ++i)
+				*imgHesPtr++ = img[i];
+		}
+	}
 
 	// Step 1: Generate the integral image
-	createIntImg(img.data, imgInt, width, height);
+	createIntImg(img, imgInt, width, height);
 
 	// Step 2: Generate the approximate guassin-derivate image
-	createHessinPyramid(img.data, imgInt, imgHesPyr, octaveNum, layerNum, g_hessin_template, width, height);
+	createHessinPyramid(img, imgInt, imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMarkTmp, width, height);
 
 	// Step 3: Conduct non-maximum suppression
-	suppressNonMaximum(imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMark.data, width, height);
+	suppressNonMaximum(imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMark, width, height);
 
 	// Step 4: Conduct accurate sub-pixel interest point location,edge & threshold suppression
-	int interPointNum = locateRefine(imgHesPyr, octaveNum, layerNum, g_hessin_template, 0.3, 10, imgMark.data);
+	int interPointNum = locateRefine(imgHesPyr, octaveNum, layerNum, g_hessin_template, 0.3, 10, imgMark);
+
+	for (int i = 0; i < fullSize; ++i, ++imgMark)
+	{
+		if (*imgMark = *imgMark * imgMarkTmp[i])
+			interPointNum++;
+	}
+
+
+	free(imgInt);
+	free(imgHesPyr);
+	free(imgMarkTmp);
 
 	return interPointNum;
 }

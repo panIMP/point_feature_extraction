@@ -37,9 +37,13 @@ createHessinPyramid
 unsigned char* img,
 double* imgInt,
 double* imgHesPyr,
+double* imgLxxPyr,
+double* imgLyyPyr,
+double* imgLxyPyr,
 int octaveNum,
 int layerNum,
 const int* hesTempl,
+unsigned char* imgMark,
 int width,
 int height
 );
