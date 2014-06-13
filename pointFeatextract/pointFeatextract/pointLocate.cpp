@@ -411,13 +411,13 @@ const int* hesTempl
 	unsigned char* imgMarkTmp = (unsigned char*)calloc_check(fullSize, sizeof(unsigned char));
 	double* imgInt = (double*)calloc_check(fullSize, sizeof(double));
 	double* imgHesPyr = (double*)calloc_check(fullSize * octaveNum * layerNum, sizeof(double));
-	double* imgHesPtr = imgHesPyr;
+	double* imgHesPyrTmp = imgHesPyr;
 	for (int oct = 0; oct < octaveNum; ++oct)
 	{
 		for (int lay = 0; lay < layerNum; ++lay)
 		{
 			for (int i = 0; i < fullSize; ++i)
-				*imgHesPtr++ = img[i];
+				*imgHesPyrTmp++ = img[i];
 		}
 	}
 
@@ -427,6 +427,40 @@ const int* hesTempl
 	// Step 2: Generate the approximate guassin-derivate image
 	createHessinPyramid(img, imgInt, imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMarkTmp, width, height);
 
+	static int flag = 0;
+	std::ostringstream fileName;
+	if (!flag)
+	{
+		fileName << "E:/Pics/Results/Left";
+		flag++;
+	}
+	else
+	{
+		fileName << "E:/Pics/Results/Right";
+		flag--;
+	}
+
+	for (int i = 0; i < 2; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			cv::Mat imgOne = cv::Mat(height, width, CV_64FC1);
+			double* imgHes = imgHesPyr + i * 4 * fullSize + j * fullSize;
+
+			for (int k = 0; k < fullSize; ++k)
+			{
+				imgOne.at<double>(k) = imgHes[k];
+			}
+
+			fileName << "oct" << i << "lay" << j << ".jpg";
+			cv::imshow(fileName.str(), imgOne);
+			cv::imwrite(fileName.str(), imgOne);
+			cv::waitKey(0);
+		}
+
+	}
+
+
 	// Step 3: Conduct non-maximum suppression
 	suppressNonMaximum(imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMark, width, height);
 
@@ -435,6 +469,7 @@ const int* hesTempl
 
 	for (int i = 0; i < fullSize; ++i, ++imgMark)
 	{
+		//*imgMark = 255;
 		if (*imgMark = *imgMark * imgMarkTmp[i])
 			interPointNum++;
 	}
