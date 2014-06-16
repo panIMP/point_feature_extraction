@@ -84,21 +84,27 @@ int width,
 int height
 )
 {
-	*imgInt = *img;
-	imgInt++;
+	double* imgPtr = imgInt + width + 1 + 1;
+
+	*imgPtr = *img;
+	
+	imgPtr++;
 	img++;
-	for (int x = 1; x < width; ++x, ++imgInt, ++img)
+
+	for (int x = 1; x < width; ++x, ++imgPtr, ++img)
 	{
-		*imgInt = *img + *(imgInt-1);
+		*imgPtr = *img + *(imgPtr - 1);
 	}
 
 	for (int y = 1; y < height; ++y)
 	{
 		int sum = 0;
-		for (int x = 0; x < width; ++x, ++img, ++imgInt)
+		imgPtr = imgInt + (y + 1) * (width + 1) + 1;
+
+		for (int x = 0; x < width; ++x, ++img, ++imgPtr)
 		{
 			sum += *img;
-			*imgInt = *(imgInt - width) + sum;
+			*imgPtr = *(imgPtr - width - 1) + sum;
 		}
 	}
 }
@@ -138,120 +144,135 @@ int height
 			int xEnd = width - xStart;
 			int yEnd = height - yStart;
 
-			int pxx11 = hesTempl[startPos + 2] * width + hesTempl[startPos + 1];
-			int pxx12 = hesTempl[startPos + 2] * width + hesTempl[startPos + 3];
-			int pxx13 = hesTempl[startPos + 4] * width + hesTempl[startPos + 1];
-			int pxx14 = hesTempl[startPos + 4] * width + hesTempl[startPos + 3];
+			int pxx11 = hesTempl[startPos + 2] * (width + 1) + hesTempl[startPos + 1];
+			int pxx12 = hesTempl[startPos + 2] * (width + 1) + hesTempl[startPos + 3] + 1;
+			int pxx13 = (hesTempl[startPos + 4] + 1) * (width + 1) + hesTempl[startPos + 1];
+			int pxx14 = (hesTempl[startPos + 4] + 1) * (width + 1) + hesTempl[startPos + 3] + 1;
 			int sxx1 = hesTempl[startPos + 5];
 			int wxx1 = hesTempl[startPos + 6];
 
-			int pxx21 = hesTempl[startPos + 8] * width + hesTempl[startPos + 7];
-			int pxx22 = hesTempl[startPos + 8] * width + hesTempl[startPos + 9];
-			int pxx23 = hesTempl[startPos + 10] * width + hesTempl[startPos + 7];
-			int pxx24 = hesTempl[startPos + 10] * width + hesTempl[startPos + 9];
+			int pxx21 = hesTempl[startPos + 8] * (width + 1) + hesTempl[startPos + 7];
+			int pxx22 = hesTempl[startPos + 8] * (width + 1) + hesTempl[startPos + 9] + 1;
+			int pxx23 = (hesTempl[startPos + 10] + 1) * (width + 1) + hesTempl[startPos + 7];
+			int pxx24 = (hesTempl[startPos + 10] + 1) * (width + 1) + hesTempl[startPos + 9] + 1;
 			int sxx2 = hesTempl[startPos + 11];
 			int wxx2 = hesTempl[startPos + 12];
 
-			int pxx31 = hesTempl[startPos + 14] * width + hesTempl[startPos + 13];
-			int pxx32 = hesTempl[startPos + 14] * width + hesTempl[startPos + 15];
-			int pxx33 = hesTempl[startPos + 16] * width + hesTempl[startPos + 13];
-			int pxx34 = hesTempl[startPos + 16] * width + hesTempl[startPos + 15];
+			int pxx31 = hesTempl[startPos + 14] * (width + 1) + hesTempl[startPos + 13];
+			int pxx32 = hesTempl[startPos + 14] * (width + 1) + hesTempl[startPos + 15] + 1;
+			int pxx33 = (hesTempl[startPos + 16] + 1) * (width + 1) + hesTempl[startPos + 13];
+			int pxx34 = (hesTempl[startPos + 16] + 1) * (width + 1) + hesTempl[startPos + 15] + 1;
 			int sxx3 = hesTempl[startPos + 17];
 			int wxx3 = hesTempl[startPos + 18];
 
 			// Corner point coordinates of the 3 rects in Lyy image
 			startPos += 26;
 
-			int pyy11 = hesTempl[startPos + 2] * width + hesTempl[startPos + 1];
-			int pyy12 = hesTempl[startPos + 2] * width + hesTempl[startPos + 3];
-			int pyy13 = hesTempl[startPos + 4] * width + hesTempl[startPos + 1];
-			int pyy14 = hesTempl[startPos + 4] * width + hesTempl[startPos + 3];
+			int pyy11 = hesTempl[startPos + 2] * (width + 1) + hesTempl[startPos + 1];
+			int pyy12 = hesTempl[startPos + 2] * (width + 1) + hesTempl[startPos + 3] + 1;
+			int pyy13 = (hesTempl[startPos + 4] + 1) * (width + 1) + hesTempl[startPos + 1];
+			int pyy14 = (hesTempl[startPos + 4] + 1) * (width + 1) + hesTempl[startPos + 3] + 1;
 			int syy1 = hesTempl[startPos + 5];
 			int wyy1 = hesTempl[startPos + 6];
 
-			int pyy21 = hesTempl[startPos + 8] * width + hesTempl[startPos + 7];
-			int pyy22 = hesTempl[startPos + 8] * width + hesTempl[startPos + 9];
-			int pyy23 = hesTempl[startPos + 10] * width + hesTempl[startPos + 7];
-			int pyy24 = hesTempl[startPos + 10] * width + hesTempl[startPos + 9];
+			int pyy21 = hesTempl[startPos + 8] * (width + 1) + hesTempl[startPos + 7];
+			int pyy22 = hesTempl[startPos + 8] * (width + 1) + hesTempl[startPos + 9] + 1;
+			int pyy23 = (hesTempl[startPos + 10] + 1) * (width + 1) + hesTempl[startPos + 7];
+			int pyy24 = (hesTempl[startPos + 10] + 1) * (width + 1) + hesTempl[startPos + 9] + 1;
 			int syy2 = hesTempl[startPos + 11];
 			int wyy2 = hesTempl[startPos + 12];
 
-			int pyy31 = hesTempl[startPos + 14] * width + hesTempl[startPos + 13];
-			int pyy32 = hesTempl[startPos + 14] * width + hesTempl[startPos + 15];
-			int pyy33 = hesTempl[startPos + 16] * width + hesTempl[startPos + 13];
-			int pyy34 = hesTempl[startPos + 16] * width + hesTempl[startPos + 15];
+			int pyy31 = hesTempl[startPos + 14] * (width + 1) + hesTempl[startPos + 13];
+			int pyy32 = hesTempl[startPos + 14] * (width + 1) + hesTempl[startPos + 15] + 1;
+			int pyy33 = (hesTempl[startPos + 16] + 1) * (width + 1) + hesTempl[startPos + 13];
+			int pyy34 = (hesTempl[startPos + 16] + 1) * (width + 1) + hesTempl[startPos + 15] + 1;
 			int syy3 = hesTempl[startPos + 17];
 			int wyy3 = hesTempl[startPos + 18];
 
 			// Corner point coordinates of the 4 rects in Lxy(Lyx) image
 			startPos += 26;
 
-			int pxy11 = hesTempl[startPos + 2] * width + hesTempl[startPos + 1];
-			int pxy12 = hesTempl[startPos + 2] * width + hesTempl[startPos + 3];
-			int pxy13 = hesTempl[startPos + 4] * width + hesTempl[startPos + 1];
-			int pxy14 = hesTempl[startPos + 4] * width + hesTempl[startPos + 3];
+			int pxy11 = hesTempl[startPos + 2] * (width + 1) + hesTempl[startPos + 1];
+			int pxy12 = hesTempl[startPos + 2] * (width + 1) + hesTempl[startPos + 3] + 1;
+			int pxy13 = (hesTempl[startPos + 4] + 1) * (width + 1) + hesTempl[startPos + 1];
+			int pxy14 = (hesTempl[startPos + 4] + 1) * (width + 1) + hesTempl[startPos + 3] + 1;
 			int sxy1 = hesTempl[startPos + 5];
 			int wxy1 = hesTempl[startPos + 6];
 
-			int pxy21 = hesTempl[startPos + 8] * width + hesTempl[startPos + 7];
-			int pxy22 = hesTempl[startPos + 8] * width + hesTempl[startPos + 9];
-			int pxy23 = hesTempl[startPos + 10] * width + hesTempl[startPos + 7];
-			int pxy24 = hesTempl[startPos + 10] * width + hesTempl[startPos + 9];
+			int pxy21 = hesTempl[startPos + 8] * (width + 1) + hesTempl[startPos + 7];
+			int pxy22 = hesTempl[startPos + 8] * (width + 1) + hesTempl[startPos + 9] + 1;
+			int pxy23 = (hesTempl[startPos + 10] + 1) * (width + 1) + hesTempl[startPos + 7];
+			int pxy24 = (hesTempl[startPos + 10] + 1) * (width + 1) + hesTempl[startPos + 9] + 1;
 			int sxy2 = hesTempl[startPos + 11];
 			int wxy2 = hesTempl[startPos + 12];
 
-			int pxy31 = hesTempl[startPos + 14] * width + hesTempl[startPos + 13];
-			int pxy32 = hesTempl[startPos + 14] * width + hesTempl[startPos + 15];
-			int pxy33 = hesTempl[startPos + 16] * width + hesTempl[startPos + 13];
-			int pxy34 = hesTempl[startPos + 16] * width + hesTempl[startPos + 15];
+			int pxy31 = hesTempl[startPos + 14] * (width + 1) + hesTempl[startPos + 13];
+			int pxy32 = hesTempl[startPos + 14] * (width + 1) + hesTempl[startPos + 15] + 1;
+			int pxy33 = (hesTempl[startPos + 16] + 1) * (width + 1) + hesTempl[startPos + 13];
+			int pxy34 = (hesTempl[startPos + 16] + 1) * (width + 1) + hesTempl[startPos + 15] + 1;
 			int sxy3 = hesTempl[startPos + 17];
 			int wxy3 = hesTempl[startPos + 18];
 
-			int pxy41 = hesTempl[startPos + 20] * width + hesTempl[startPos + 19];
-			int pxy42 = hesTempl[startPos + 20] * width + hesTempl[startPos + 21];
-			int pxy43 = hesTempl[startPos + 22] * width + hesTempl[startPos + 19];
-			int pxy44 = hesTempl[startPos + 22] * width + hesTempl[startPos + 21];
+			int pxy41 = hesTempl[startPos + 20] * (width + 1) + hesTempl[startPos + 19];
+			int pxy42 = hesTempl[startPos + 20] * (width + 1) + hesTempl[startPos + 21] + 1;
+			int pxy43 = (hesTempl[startPos + 22] + 1) * (width + 1) + hesTempl[startPos + 19];
+			int pxy44 = (hesTempl[startPos + 22] + 1) * (width + 1) + hesTempl[startPos + 21] + 1;
 			int sxy4 = hesTempl[startPos + 23];
 			int wxy4 = hesTempl[startPos + 24];
 
 			// Start filtering
-			int pixelPos = yStart * width + xStart + oct * layerNum * width * height + lay * width * height;
-			int pixelPosStart = pixelPos;
+
+			// processing-start position for each image in sequential layer and octave;
+			int imgPosStart = oct * layerNum * width * height + lay * width * height;
+			int pixeIntlPosStart = (yStart + 1) * (width + 1) + xStart + 1;
 			for (int y = yStart; y < yEnd; ++y)
 			{
-				pixelPos = y * width + xStart + oct * layerNum * width * height + lay * width * height;
-				for (int x = xStart; x < xEnd; ++x, ++pixelPos)
+				int pixelPos = imgPosStart + y * width + xStart;
+				int pixelIntPos = (y + 1) * (width + 1) + xStart + 1;
+				for (int x = xStart; x < xEnd; ++x, ++pixelPos, ++pixelIntPos)
 				{
-					int gap = pixelPos - pixelPosStart;
+					// update current integral image pointer
+					int gap = pixelIntPos - pixeIntlPosStart;
 					double* imgIntTmp = imgInt + gap;
 
-					double lxx =(imgIntTmp[pxx14] - imgIntTmp[pxx13] - imgIntTmp[pxx12] + imgIntTmp[pxx11]) * wxx1 +
-								(imgIntTmp[pxx24] - imgIntTmp[pxx23] - imgIntTmp[pxx22] + imgIntTmp[pxx21]) * wxx2 +
-								(imgIntTmp[pxx34] - imgIntTmp[pxx33] - imgIntTmp[pxx32] + imgIntTmp[pxx31]) * wxx3;
-					double lyy =(imgIntTmp[pyy14] - imgIntTmp[pyy13] - imgIntTmp[pyy12] + imgIntTmp[pyy11]) * wyy1 +
-								(imgIntTmp[pyy24] - imgIntTmp[pyy23] - imgIntTmp[pyy22] + imgIntTmp[pyy21]) * wyy2 +
-								(imgIntTmp[pyy34] - imgIntTmp[pyy33] - imgIntTmp[pyy32] + imgIntTmp[pyy31]) * wyy3;
-					double lxy =(imgIntTmp[pxy14] - imgIntTmp[pxy13] - imgIntTmp[pxy12] + imgIntTmp[pxy11]) * wxy1 +
-								(imgIntTmp[pxy24] - imgIntTmp[pxy23] - imgIntTmp[pxy22] + imgIntTmp[pxy21]) * wxy2 +
-								(imgIntTmp[pxy34] - imgIntTmp[pxy33] - imgIntTmp[pxy32] + imgIntTmp[pxy31]) * wxy3 +
-								(imgIntTmp[pxy44] - imgIntTmp[pxy43] - imgIntTmp[pxy42] + imgIntTmp[pxy41]) * wxy4;
+					// fetch lxx, lyy, lxy
+					double lxx = (imgIntTmp[pxx14] - imgIntTmp[pxx13] - imgIntTmp[pxx12] + imgIntTmp[pxx11]) * wxx1 +
+						(imgIntTmp[pxx24] - imgIntTmp[pxx23] - imgIntTmp[pxx22] + imgIntTmp[pxx21]) * wxx2 +
+						(imgIntTmp[pxx34] - imgIntTmp[pxx33] - imgIntTmp[pxx32] + imgIntTmp[pxx31]) * wxx3;
+
+					double lyy = (imgIntTmp[pyy14] - imgIntTmp[pyy13] - imgIntTmp[pyy12] + imgIntTmp[pyy11]) * wyy1 +
+						(imgIntTmp[pyy24] - imgIntTmp[pyy23] - imgIntTmp[pyy22] + imgIntTmp[pyy21]) * wyy2 +
+						(imgIntTmp[pyy34] - imgIntTmp[pyy33] - imgIntTmp[pyy32] + imgIntTmp[pyy31]) * wyy3;
+
+					double lxy = (imgIntTmp[pxy14] - imgIntTmp[pxy13] - imgIntTmp[pxy12] + imgIntTmp[pxy11]) * wxy1 +
+						(imgIntTmp[pxy24] - imgIntTmp[pxy23] - imgIntTmp[pxy22] + imgIntTmp[pxy21]) * wxy2 +
+						(imgIntTmp[pxy34] - imgIntTmp[pxy33] - imgIntTmp[pxy32] + imgIntTmp[pxy31]) * wxy3 +
+						(imgIntTmp[pxy44] - imgIntTmp[pxy43] - imgIntTmp[pxy42] + imgIntTmp[pxy41]) * wxy4;
 
 					// normally sxx1 == sxx2 == sxx3 == sxx4, the others are the same.
 					imgHesPyr[pixelPos] = (lxx / sxx1) * (lyy / syy1) - (0.9 * lxy / sxy1)*(0.9 * lxy / sxy1);
 
 					double trH = lxx + lyy;
-					double detH = lxx * lyy - lxy * lxy;
+					double detH = lxx * lyy - lxy * lxy + 0.000001;
 					static double thresh = calcEdgeSupprThresh(10.0);
 
 					if ((trH * trH) / detH > thresh)
 					{
 						imgMark[y * width + x] = 1;
 					}
+
+					if ((lxx != 0) || (lyy != 0) || (lxy != 0))
+					{
+						if (imgHesPyr[pixelPos])
+						{
+							static int count = 0;
+							count++;
+						}
+					}
 				}
 			}
 		}
 	}
-	
 }
 
 
@@ -295,7 +316,7 @@ int height
 				int thirdLine = (y + 1) * width + xStart;
 				for (int x = xStart; x < xEnd; ++x, ++firstLine, ++secondLine, ++thirdLine)
 				{
-					double pUp00 = imgUp[firstLine - 1];
+					/*double pUp00 = imgUp[firstLine - 1];
 					double pUp01 = imgUp[firstLine];
 					double pUp02 = imgUp[firstLine + 1];
 					double pUp10 = imgUp[secondLine - 1];
@@ -323,7 +344,37 @@ int height
 					double pDown12 = imgDown[secondLine + 1];
 					double pDown20 = imgDown[thirdLine - 1];
 					double pDown21 = imgDown[thirdLine];
-					double pDown22 = imgDown[thirdLine + 1];
+					double pDown22 = imgDown[thirdLine + 1];*/
+
+					double pUp00 = abs(imgUp[firstLine - 1]);
+					double pUp01 = abs(imgUp[firstLine]);
+					double pUp02 = abs(imgUp[firstLine + 1]);
+					double pUp10 = abs(imgUp[secondLine - 1]);
+					double pUp11 = abs(imgUp[secondLine]);
+					double pUp12 = abs(imgUp[secondLine + 1]);
+					double pUp20 = abs(imgUp[thirdLine - 1]);
+					double pUp21 = abs(imgUp[thirdLine]);
+					double pUp22 = abs(imgUp[thirdLine + 1]);
+
+					double pMid00 = abs(imgMid[firstLine - 1]);
+					double pMid01 = abs(imgMid[firstLine]);
+					double pMid02 = abs(imgMid[firstLine + 1]);
+					double pMid10 = abs(imgMid[secondLine - 1]);
+					double pMid11 = abs(imgMid[secondLine]);
+					double pMid12 = abs(imgMid[secondLine + 1]);
+					double pMid20 = abs(imgMid[thirdLine - 1]);
+					double pMid21 = abs(imgMid[thirdLine]);
+					double pMid22 = abs(imgMid[thirdLine + 1]);
+
+					double pDown00 = abs(imgDown[firstLine - 1]);
+					double pDown01 = abs(imgDown[firstLine]);
+					double pDown02 = abs(imgDown[firstLine + 1]);
+					double pDown10 = abs(imgDown[secondLine - 1]);
+					double pDown11 = abs(imgDown[secondLine]);
+					double pDown12 = abs(imgDown[secondLine + 1]);
+					double pDown20 = abs(imgDown[thirdLine - 1]);
+					double pDown21 = abs(imgDown[thirdLine]);
+					double pDown22 = abs(imgDown[thirdLine + 1]);
 
 					if ((pMid11 > pMid00) && (pMid11 > pMid01) && (pMid11 > pMid02) && (pMid11 > pMid10)
 						&& (pMid11 > pMid12) && (pMid11 > pMid20) && (pMid11 > pMid21) && (pMid11 > pMid22)
@@ -409,7 +460,7 @@ const int* hesTempl
 	unsigned char* img = imgMat.data;
 	unsigned char* imgMark = imgMarkMat.data;
 	unsigned char* imgMarkTmp = (unsigned char*)calloc_check(fullSize, sizeof(unsigned char));
-	double* imgInt = (double*)calloc_check(fullSize, sizeof(double));
+	double* imgInt = (double*)calloc_check((width + 1) * (height + 1), sizeof(double));
 	double* imgHesPyr = (double*)calloc_check(fullSize * octaveNum * layerNum, sizeof(double));
 	double* imgHesPyrTmp = imgHesPyr;
 	for (int oct = 0; oct < octaveNum; ++oct)
@@ -439,22 +490,28 @@ const int* hesTempl
 		fileName << "E:/Pics/Results/Right";
 		flag--;
 	}
+	std::ostringstream realFileName;
 
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < 1; ++i)
 	{
-		for (int j = 0; j < 4; ++j)
+		for (int j = 0; j < 3; ++j)
 		{
 			cv::Mat imgOne = cv::Mat(height, width, CV_64FC1);
-			double* imgHes = imgHesPyr + i * 4 * fullSize + j * fullSize;
+			double* imgHes = imgHesPyr + i * 3 * fullSize + j * fullSize;
 
 			for (int k = 0; k < fullSize; ++k)
 			{
 				imgOne.at<double>(k) = imgHes[k];
 			}
 
-			fileName << "oct" << i << "lay" << j << ".jpg";
-			cv::imshow(fileName.str(), imgOne);
-			cv::imwrite(fileName.str(), imgOne);
+			realFileName.seekp(0);
+			realFileName.clear();
+			realFileName << fileName.str();
+			realFileName << "oct" << i << "lay" << j << ".jpg";
+
+
+			cv::imshow(realFileName.str(), imgOne);
+			cv::imwrite(realFileName.str(), imgOne);
 			cv::waitKey(0);
 		}
 
@@ -469,7 +526,7 @@ const int* hesTempl
 
 	for (int i = 0; i < fullSize; ++i, ++imgMark)
 	{
-		//*imgMark = 255;
+		imgMarkTmp[i] = 1;
 		if (*imgMark = *imgMark * imgMarkTmp[i])
 			interPointNum++;
 	}

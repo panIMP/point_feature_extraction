@@ -88,8 +88,8 @@ std::string mergeResultStr
 	cv::Mat leftResult = imgPair.first;
 	cv::Mat rightResult = imgPair.second;
 
-	drawCross(leftResult.data, imgMarkPair.first, 20, leftResult.cols, leftResult.rows);
-	drawCross(rightResult.data, imgMarkPair.second, 20, rightResult.cols, rightResult.rows);
+	drawCross(leftResult.data, imgMarkPair.first, 5, leftResult.cols, leftResult.rows);
+	drawCross(rightResult.data, imgMarkPair.second, 5, rightResult.cols, rightResult.rows);
 
 	cv::Size size(leftResult.cols + rightResult.cols, MAX(leftResult.rows, rightResult.rows));
 	cv::Mat mergeResult(size, CV_8UC3);

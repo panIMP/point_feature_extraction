@@ -20,7 +20,9 @@ main(int argc, char* argv[])
 	std::string srcFolder = "E:/Pics/Images/";
 	std::string dstFolder = "E:/Pics/Results/";
 
-	std::pair<cv::Mat, cv::Mat> imgPair = displayInit(srcFolder + "spot1.bmp", srcFolder + "spot2.bmp", dstFolder + "merge.jpg");
+	//std::pair<cv::Mat, cv::Mat> imgPair = displayInit(srcFolder + "left.png", srcFolder + "right.png", dstFolder + "merge.jpg");
+
+	std::pair<cv::Mat, cv::Mat> imgPair = displayInit(srcFolder + "view1_gray.jpg", srcFolder + "view2_gray.jpg", dstFolder + "merge.jpg");
 
 	cv::Mat leftImg = imgPair.first;
 	cv::Mat rightImg = imgPair.second;
@@ -41,9 +43,9 @@ main(int argc, char* argv[])
 
 	// Image Interest Points Extracting Stage
 
-	int leftPointNum = surf(leftImg, leftImgMark, width, height, 2, 4, hessinTemplate);
+	int leftPointNum = surf(leftImg, leftImgMark, width, height, 1, 3, hessinTemplate);
 
-	int rightPointNum = surf(rightImg, rightImgMark, width, height, 2, 4, hessinTemplate);
+	int rightPointNum = surf(rightImg, rightImgMark, width, height, 1, 3, hessinTemplate);
 
 
 	std::pair<unsigned char*, unsigned char*> imgMarkPair = std::make_pair(leftImgMark.data, rightImgMark.data);
