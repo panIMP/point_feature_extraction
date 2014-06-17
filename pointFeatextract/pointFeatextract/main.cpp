@@ -14,7 +14,7 @@
 int
 main(int argc, char* argv[])
 {
-	int* hessinTemplate = getHessinTemplate();
+	/*int* hessinTemplate = getHessinTemplate();
 
 	// Image Load and Display Stage
 	std::string srcFolder = "E:/Pics/Images/";
@@ -50,11 +50,11 @@ main(int argc, char* argv[])
 
 	std::pair<unsigned char*, unsigned char*> imgMarkPair = std::make_pair(leftImgMark.data, rightImgMark.data);
 	
-	/*
-	Feat* zFeatL = (Feat*)calloc_check(leftPointNum * tarPNumL, sizeof(Feat));
-	Feat* zFeatR = (Feat*)calloc_check(rightPointNum * tarPNumR, sizeof(Feat));
-	describe(leftImg.data, leftImgMark.data, zFeatL, width, height, window, orderMax);
-	describe(rightImg.data, rightImgMark.data, zFeatR, width, height, window, orderMax);*/
+	
+	//Feat* zFeatL = (Feat*)calloc_check(leftPointNum * tarPNumL, sizeof(Feat));
+	//Feat* zFeatR = (Feat*)calloc_check(rightPointNum * tarPNumR, sizeof(Feat));
+	//describe(leftImg.data, leftImgMark.data, zFeatL, width, height, window, orderMax);
+	//describe(rightImg.data, rightImgMark.data, zFeatR, width, height, window, orderMax);
 	
 	pMatchCouple couple = (pMatchCouple)calloc_check(leftPointNum, sizeof(MatchCouple));
 	//match(zFeatL, leftPointNum, zFeatR, rightPointNum, featNum, couple);
@@ -62,7 +62,20 @@ main(int argc, char* argv[])
 	// Result Display Stage
 	displayResult(imgPair, imgMarkPair, couple, leftPointNum, dstFolder + "left.jpg", dstFolder + "right.jpg", dstFolder + "mergeResult.jpg");
 
+	return 0;*/
 
 
-	return 0;
+	cv::Mat  image, image1 = cv::imread("E:/Pics/Images/view1_gray.jpg");
+	//�Ҷȱ任
+	cv::cvtColor(image1, image, CV_BGR2GRAY);
+	std::vector<cv::KeyPoint> keypoints;
+	cv::SurfFeatureDetector surf(2500);
+	surf.detect(image, keypoints);
+	cv::drawKeypoints(image, keypoints, image, cv::Scalar::all(255), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+	cv::namedWindow("surf");
+	cv::imshow("surf", image);
+	cv::imwrite("E:/Pics/Results/opencvsurf.jpg", image);
+	cv::waitKey(0);
+
 }

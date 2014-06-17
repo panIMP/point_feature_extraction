@@ -254,13 +254,14 @@ int height
 
 					double trH = lxx + lyy;
 					double detH = lxx * lyy - lxy * lxy + 0.000001;
-					static double thresh = calcEdgeSupprThresh(10.0);
+					static double thresh = calcEdgeSupprThresh(100.0);
 
 					if ((trH * trH) / detH > thresh)
 					{
 						imgMark[y * width + x] = 1;
 					}
 
+					// for debug only
 					if ((lxx != 0) || (lyy != 0) || (lxy != 0))
 					{
 						if (imgHesPyr[pixelPos])
@@ -407,9 +408,9 @@ int height
 						else if (realPos >= imgSize)
 							realPos = imgSize - 1;
 
-						imgMark[realPos] = 255;*/
+						imgMark[realPos] = 1;*/
 
-						imgMark[secondLine] = 255;
+						imgMark[secondLine] = 1;
 					}
 					else
 					{
@@ -492,9 +493,9 @@ const int* hesTempl
 	}
 	std::ostringstream realFileName;
 
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < octaveNum; ++i)
 	{
-		for (int j = 0; j < 3; ++j)
+		for (int j = 0; j < layerNum; ++j)
 		{
 			cv::Mat imgOne = cv::Mat(height, width, CV_64FC1);
 			double* imgHes = imgHesPyr + i * 3 * fullSize + j * fullSize;
