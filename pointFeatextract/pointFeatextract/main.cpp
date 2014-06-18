@@ -14,58 +14,44 @@
 int
 main(int argc, char* argv[])
 {
-	/*int* hessinTemplate = getHessinTemplate();
+	int* hessinTemplate = getHessinTemplate();
 
 	// Image Load and Display Stage
 	std::string srcFolder = "E:/Pics/Images/";
 	std::string dstFolder = "E:/Pics/Results/";
 
-	//std::pair<cv::Mat, cv::Mat> imgPair = displayInit(srcFolder + "left.png", srcFolder + "right.png", dstFolder + "merge.jpg");
+	std::pair<cv::Mat, cv::Mat> imgMatPair = displayInit(srcFolder + "view1_gray.jpg", srcFolder + "view1_gray.jpg", dstFolder + "match.jpg");
 
-	std::pair<cv::Mat, cv::Mat> imgPair = displayInit(srcFolder + "view1_gray.jpg", srcFolder + "view2_gray.jpg", dstFolder + "merge.jpg");
-
-	cv::Mat leftImg = imgPair.first;
-	cv::Mat rightImg = imgPair.second;
+	cv::Mat leftImgMat = imgMatPair.first;
+	cv::Mat rightImgMat = imgMatPair.second;
+	unsigned char* leftImg = leftImgMat.data;
+	unsigned char* rightImg = rightImgMat.data;
 	
-	int width = leftImg.cols;
-	int height = rightImg.rows;
+	int width = leftImgMat.cols;
+	int height = rightImgMat.rows;
 	int fullSize = width * height;
-	
-	cv::Mat leftImgMark = cv::Mat(height, width, CV_8UC1, cv::Scalar(0));
-	cv::Mat rightImgMark = cv::Mat(height, width, CV_8UC1, cv::Scalar(0));
 
-	int orderMax = 4;
-	int featNum = calcFeatNum(orderMax);
-
-	int window = 15;
-
-	std::cout << leftImgMark.channels();
+	unsigned char* leftImgMark = (unsigned char*)calloc_check(fullSize, sizeof(unsigned char));
+	unsigned char* rightImgMark = (unsigned char*)calloc_check(fullSize, sizeof(unsigned char));
 
 	// Image Interest Points Extracting Stage
-
 	int leftPointNum = surf(leftImg, leftImgMark, width, height, 1, 3, hessinTemplate);
-
 	int rightPointNum = surf(rightImg, rightImgMark, width, height, 1, 3, hessinTemplate);
 
-
-	std::pair<unsigned char*, unsigned char*> imgMarkPair = std::make_pair(leftImgMark.data, rightImgMark.data);
-	
-	
-	//Feat* zFeatL = (Feat*)calloc_check(leftPointNum * tarPNumL, sizeof(Feat));
-	//Feat* zFeatR = (Feat*)calloc_check(rightPointNum * tarPNumR, sizeof(Feat));
-	//describe(leftImg.data, leftImgMark.data, zFeatL, width, height, window, orderMax);
-	//describe(rightImg.data, rightImgMark.data, zFeatR, width, height, window, orderMax);
-	
-	pMatchCouple couple = (pMatchCouple)calloc_check(leftPointNum, sizeof(MatchCouple));
-	//match(zFeatL, leftPointNum, zFeatR, rightPointNum, featNum, couple);
+	// Get feat and match feat
+	int matchNum = MIN(leftPointNum, rightPointNum);
+	pMatchCouple couple = (pMatchCouple)calloc_check(matchNum, sizeof(MatchCouple));
+	// Method 1: use zernike descriptors
+	getZernikeFeat(leftImg, rightImg, 4, 15, width, height, leftPointNum, rightPointNum, leftImgMark, rightImgMark, couple, &matchNum);
 
 	// Result Display Stage
-	displayResult(imgPair, imgMarkPair, couple, leftPointNum, dstFolder + "left.jpg", dstFolder + "right.jpg", dstFolder + "mergeResult.jpg");
+	std::pair<unsigned char*, unsigned char*> imgMarkPair = std::make_pair(leftImgMark, rightImgMark);
+	displayResult(imgMatPair, imgMarkPair, couple, matchNum, dstFolder + "left.jpg", dstFolder + "right.jpg", dstFolder + "matchResult.jpg");
 
-	return 0;*/
+	return 0;
 
 
-	cv::Mat  image, image1 = cv::imread("E:/Pics/Images/view1_gray.jpg");
+	/*cv::Mat  image, image1 = cv::imread("E:/Pics/Images/view1_gray.jpg");
 	//�Ҷȱ任
 	cv::cvtColor(image1, image, CV_BGR2GRAY);
 	std::vector<cv::KeyPoint> keypoints;
@@ -76,6 +62,7 @@ main(int argc, char* argv[])
 	cv::namedWindow("surf");
 	cv::imshow("surf", image);
 	cv::imwrite("E:/Pics/Results/opencvsurf.jpg", image);
-	cv::waitKey(0);
+	cv::waitKey(0);*/
 
 }
+

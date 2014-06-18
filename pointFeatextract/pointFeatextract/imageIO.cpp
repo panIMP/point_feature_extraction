@@ -85,38 +85,35 @@ std::string rightResultStr,
 std::string mergeResultStr
 )
 {
-	cv::Mat leftResult = imgPair.first;
-	cv::Mat rightResult = imgPair.second;
+	cv::Mat leftImg = imgPair.first;
+	cv::Mat rightImg = imgPair.second;
 
-	drawCross(leftResult.data, imgMarkPair.first, 5, leftResult.cols, leftResult.rows);
-	drawCross(rightResult.data, imgMarkPair.second, 5, rightResult.cols, rightResult.rows);
+	drawCross(leftImg.data, imgMarkPair.first, 5, leftImg.cols, leftImg.rows);
+	drawCross(rightImg.data, imgMarkPair.second, 5, rightImg.cols, rightImg.rows);
 
-	cv::Size size(leftResult.cols + rightResult.cols, MAX(leftResult.rows, rightResult.rows));
-	cv::Mat mergeResult(size, CV_8UC3);
-	cv::Mat leftMergeResult = mergeResult(cv::Rect(0, 0, leftResult.cols, leftResult.rows));
-	cv::Mat rightMergeResult = mergeResult(cv::Rect(leftResult.cols, 0, rightResult.cols, rightResult.rows));
-	cv::cvtColor(leftResult, leftMergeResult, CV_GRAY2BGR);
-	cv::cvtColor(rightResult, rightMergeResult, CV_GRAY2BGR);
+	cv::Size size(leftImg.cols + rightImg.cols, MAX(leftImg.rows, rightImg.rows));
+	cv::Mat merge(size, CV_8UC3);
+	cv::Mat leftMerge = merge(cv::Rect(0, 0, leftImg.cols, leftImg.rows));
+	cv::Mat rightMerge = merge(cv::Rect(leftImg.cols, 0, rightImg.cols, rightImg.rows));
+	cv::cvtColor(leftImg, leftMerge, CV_GRAY2BGR);
+	cv::cvtColor(rightImg, rightMerge, CV_GRAY2BGR);
 
 	for (int i = 0; i < actPNumL; i += 3) {
-		cv::line(mergeResult, cv::Point(couple[i].Lx, couple[i].Ly),
-			cv::Point(couple[i].Rx + leftMergeResult.cols, couple[i].Ry), cv::Scalar(255, 0, 0));
+		cv::line(merge, cv::Point(couple[i].Lx, couple[i].Ly), cv::Point(couple[i].Rx + leftMerge.cols, couple[i].Ry), cv::Scalar(255, 0, 0));
 	}
 	for (int i = 1; i < actPNumL; i += 3) {
-		cv::line(mergeResult, cv::Point(couple[i].Lx, couple[i].Ly),
-			cv::Point(couple[i].Rx + leftMergeResult.cols, couple[i].Ry), cv::Scalar(0, 255, 0));
+		cv::line(merge, cv::Point(couple[i].Lx, couple[i].Ly), cv::Point(couple[i].Rx + leftMerge.cols, couple[i].Ry), cv::Scalar(0, 255, 0));
 	}
 	for (int i = 2; i < actPNumL; i += 3) {
-		cv::line(mergeResult, cv::Point(couple[i].Lx, couple[i].Ly),
-			cv::Point(couple[i].Rx + leftMergeResult.cols, couple[i].Ry), cv::Scalar(0, 0, 255));
+		cv::line(merge, cv::Point(couple[i].Lx, couple[i].Ly), cv::Point(couple[i].Rx + leftMerge.cols, couple[i].Ry), cv::Scalar(0, 0, 255));
 	}
 
 	// Save results
-	cv::imwrite(leftResultStr, leftResult);
-	cv::imwrite(rightResultStr, rightResult);
-	cv::imwrite(mergeResultStr, mergeResult);
+	cv::imwrite(leftResultStr, leftImg);
+	cv::imwrite(rightResultStr, rightImg);
+	cv::imwrite(mergeResultStr, merge);
 
 	cv::namedWindow("After processing");
-	cv::imshow("After processing", mergeResult);
+	cv::imshow("After processing", merge);
 	cv::waitKey(0);
 }

@@ -250,15 +250,21 @@ int height
 						(imgIntTmp[pxy44] - imgIntTmp[pxy43] - imgIntTmp[pxy42] + imgIntTmp[pxy41]) * wxy4;
 
 					// normally sxx1 == sxx2 == sxx3 == sxx4, the others are the same.
-					imgHesPyr[pixelPos] = (lxx / sxx1) * (lyy / syy1) - (0.9 * lxy / sxy1)*(0.9 * lxy / sxy1);
+					double hesValue = abs((lxx / sxx1) * (lyy / syy1) - (0.9 * lxy / sxy1)*(0.9 * lxy / sxy1));
+					imgHesPyr[pixelPos] = hesValue;
 
 					double trH = lxx + lyy;
 					double detH = lxx * lyy - lxy * lxy + 0.000001;
-					static double thresh = calcEdgeSupprThresh(100.0);
+					double ratioH = trH * trH / detH;
+					static double thresh = calcEdgeSupprThresh(10.0);
 
-					if ((trH * trH) / detH > thresh)
+					if ((ratioH < thresh) && (hesValue > 5000))
 					{
 						imgMark[y * width + x] = 1;
+					}
+					else
+					{
+						imgMark[y * width + x] = 0;
 					}
 
 					// for debug only
@@ -273,6 +279,59 @@ int height
 				}
 			}
 		}
+	}
+}
+
+
+/*Display hessin pyramid images*/
+void
+displayHessinPyramid
+(
+double* imgHesPyr,
+int octaveNum,
+int layerNum,
+int width,
+int height
+)
+{
+	int fullSize = width * height;
+	static int flag = 0;
+	std::ostringstream fileName;
+	if (!flag)
+	{
+		fileName << "E:/Pics/Results/Left";
+		flag++;
+	}
+	else
+	{
+		fileName << "E:/Pics/Results/Right";
+		flag--;
+	}
+	std::ostringstream realFileName;
+
+	for (int i = 0; i < octaveNum; ++i)
+	{
+		for (int j = 0; j < layerNum; ++j)
+		{
+			cv::Mat imgOne = cv::Mat(height, width, CV_64FC1);
+			double* imgHes = imgHesPyr + i * 3 * fullSize + j * fullSize;
+
+			for (int k = 0; k < fullSize; ++k)
+			{
+			imgOne.at<double>(k) = imgHes[k];
+			}
+
+			realFileName.seekp(0);
+			realFileName.clear();
+			realFileName << fileName.str();
+			realFileName << "oct" << i << "lay" << j << ".jpg";
+
+
+			cv::imshow(realFileName.str(), imgOne);
+			cv::imwrite(realFileName.str(), imgOne);
+			cv::waitKey(0);
+		}
+
 	}
 }
 
@@ -317,7 +376,7 @@ int height
 				int thirdLine = (y + 1) * width + xStart;
 				for (int x = xStart; x < xEnd; ++x, ++firstLine, ++secondLine, ++thirdLine)
 				{
-					/*double pUp00 = imgUp[firstLine - 1];
+					double pUp00 = imgUp[firstLine - 1];
 					double pUp01 = imgUp[firstLine];
 					double pUp02 = imgUp[firstLine + 1];
 					double pUp10 = imgUp[secondLine - 1];
@@ -345,9 +404,9 @@ int height
 					double pDown12 = imgDown[secondLine + 1];
 					double pDown20 = imgDown[thirdLine - 1];
 					double pDown21 = imgDown[thirdLine];
-					double pDown22 = imgDown[thirdLine + 1];*/
+					double pDown22 = imgDown[thirdLine + 1];
 
-					double pUp00 = abs(imgUp[firstLine - 1]);
+					/*double pUp00 = abs(imgUp[firstLine - 1]);
 					double pUp01 = abs(imgUp[firstLine]);
 					double pUp02 = abs(imgUp[firstLine + 1]);
 					double pUp10 = abs(imgUp[secondLine - 1]);
@@ -375,7 +434,7 @@ int height
 					double pDown12 = abs(imgDown[secondLine + 1]);
 					double pDown20 = abs(imgDown[thirdLine - 1]);
 					double pDown21 = abs(imgDown[thirdLine]);
-					double pDown22 = abs(imgDown[thirdLine + 1]);
+					double pDown22 = abs(imgDown[thirdLine + 1]);*/
 
 					if ((pMid11 > pMid00) && (pMid11 > pMid01) && (pMid11 > pMid02) && (pMid11 > pMid10)
 						&& (pMid11 > pMid12) && (pMid11 > pMid20) && (pMid11 > pMid21) && (pMid11 > pMid22)
@@ -446,8 +505,8 @@ unsigned char* imgMark
 int
 surf
 (
-cv::Mat& imgMat,
-cv::Mat& imgMarkMat,
+unsigned char* img,
+unsigned char* imgMark,
 int width,
 int height,
 int octaveNum,
@@ -458,8 +517,6 @@ const int* hesTempl
 	int fullSize = width * height;
 
 	/*Memory allocation*/
-	unsigned char* img = imgMat.data;
-	unsigned char* imgMark = imgMarkMat.data;
 	unsigned char* imgMarkTmp = (unsigned char*)calloc_check(fullSize, sizeof(unsigned char));
 	double* imgInt = (double*)calloc_check((width + 1) * (height + 1), sizeof(double));
 	double* imgHesPyr = (double*)calloc_check(fullSize * octaveNum * layerNum, sizeof(double));
@@ -479,45 +536,8 @@ const int* hesTempl
 	// Step 2: Generate the approximate guassin-derivate image
 	createHessinPyramid(img, imgInt, imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMarkTmp, width, height);
 
-	static int flag = 0;
-	std::ostringstream fileName;
-	if (!flag)
-	{
-		fileName << "E:/Pics/Results/Left";
-		flag++;
-	}
-	else
-	{
-		fileName << "E:/Pics/Results/Right";
-		flag--;
-	}
-	std::ostringstream realFileName;
-
-	for (int i = 0; i < octaveNum; ++i)
-	{
-		for (int j = 0; j < layerNum; ++j)
-		{
-			cv::Mat imgOne = cv::Mat(height, width, CV_64FC1);
-			double* imgHes = imgHesPyr + i * 3 * fullSize + j * fullSize;
-
-			for (int k = 0; k < fullSize; ++k)
-			{
-				imgOne.at<double>(k) = imgHes[k];
-			}
-
-			realFileName.seekp(0);
-			realFileName.clear();
-			realFileName << fileName.str();
-			realFileName << "oct" << i << "lay" << j << ".jpg";
-
-
-			cv::imshow(realFileName.str(), imgOne);
-			cv::imwrite(realFileName.str(), imgOne);
-			cv::waitKey(0);
-		}
-
-	}
-
+	// Display hessin pyramid images
+	//displayHessinPyramid(imgHesPyr, octaveNum, layerNum, width, height);
 
 	// Step 3: Conduct non-maximum suppression
 	suppressNonMaximum(imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMark, width, height);
@@ -527,7 +547,6 @@ const int* hesTempl
 
 	for (int i = 0; i < fullSize; ++i, ++imgMark)
 	{
-		imgMarkTmp[i] = 1;
 		if (*imgMark = *imgMark * imgMarkTmp[i])
 			interPointNum++;
 	}

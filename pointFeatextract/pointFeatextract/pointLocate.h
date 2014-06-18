@@ -37,13 +37,22 @@ createHessinPyramid
 unsigned char* img,
 double* imgInt,
 double* imgHesPyr,
-double* imgLxxPyr,
-double* imgLyyPyr,
-double* imgLxyPyr,
 int octaveNum,
 int layerNum,
 const int* hesTempl,
 unsigned char* imgMark,
+int width,
+int height
+);
+
+
+/*Display hessin pyramid images*/
+void
+displayHessinPyramid
+(
+double* imgHesPyr,
+int octaveNum,
+int layerNum,
 int width,
 int height
 );
@@ -81,8 +90,8 @@ unsigned char* imgMark
 int
 surf
 (
-cv::Mat& img,
-cv::Mat& imgMark,
+unsigned char* img,
+unsigned char* imgMark,
 int width,
 int height,
 int octaveNum,

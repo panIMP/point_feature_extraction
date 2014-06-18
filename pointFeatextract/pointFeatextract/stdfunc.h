@@ -24,6 +24,15 @@
 #endif
 
 
+#ifndef MIN
+#  define MIN(a,b)  ((a) > (b) ? (b) : (a))
+#endif
+
+#ifndef MAX
+#  define MAX(a,b)  ((a) < (b) ? (b) : (a))
+#endif
+
+
 // Packaged functions
 void *__cdecl malloc_check(size_t _Size);
 void *__cdecl calloc_check(size_t _NumOfElements, size_t _SizeOfElements);
