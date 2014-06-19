@@ -6,7 +6,7 @@
 
 #include <string>
 #include <utility>
-#include "pointMatch.h"
+#include "stdfunc.h"
 
 
 
@@ -36,7 +36,7 @@ displayResult
 std::pair<cv::Mat, cv::Mat> imgPair,
 std::pair<unsigned char*, unsigned char*> imgMarkPair,
 pMatchCouple couple,
-int actPNumL,
+int matchNum,
 std::string leftResultStr,
 std::string rightResultStr,
 std::string mergeResultStr

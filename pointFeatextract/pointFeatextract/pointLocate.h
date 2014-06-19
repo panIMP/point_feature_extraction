@@ -1,6 +1,10 @@
 #pragma once
 
 #include <opencv2/core/core.hpp>
+#include <opencv2\opencv.hpp>
+#include <opencv2\objdetect\objdetect.hpp>
+#include <opencv2\nonfree\features2d.hpp>
+#include <opencv2\calib3d\calib3d.hpp>
 
 
 /*get the template to generate hessin pyramids*/

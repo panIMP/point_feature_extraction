@@ -1,17 +1,17 @@
-#include "pointMatch.h"
+#include "zernikeMatch.h"
 #include "stdfunc.h"
 #include <math.h>
 
 
 void 
-normalZernikeFeat(Feat* zFeat, int actPointNum, int featNum) {
+normalZernikeFeat(zFeat* feats, int actPointNum, int featNum) {
 	int i;
 	int fNum;
 
 	double maxMode = 0.0;
 	double mode;
 
-	Feat* zFeatPtr = zFeat;
+	zFeat* featPtr = feats;
 
 	for (fNum = 0; fNum < featNum; ++fNum) {
 		if (fNum == 86) {
@@ -21,35 +21,35 @@ normalZernikeFeat(Feat* zFeat, int actPointNum, int featNum) {
 
 		maxMode = 1.0;
 
-		zFeatPtr = zFeat + fNum;
+		featPtr = feats + fNum;
 		for (i = 0; i < actPointNum; ++i) {
-			mode = zFeatPtr->feat.Mode;
+			mode = featPtr->feat.Mode;
 
 			if (mode > maxMode) {
 				maxMode = mode;
 			}
 
-			zFeatPtr += featNum;
+			featPtr += featNum;
 		}
 
 		printf_simplify("******Feat : %4d, maxMode: %lf*****\n", fNum, maxMode);
 
-		zFeatPtr = zFeat + fNum;
+		featPtr = feats + fNum;
 		for (i = 0; i < actPointNum; ++i) {
-			zFeatPtr->feat.Zr /= maxMode;
-			zFeatPtr->feat.Zi /= maxMode;
+			featPtr->feat.Zr /= maxMode;
+			featPtr->feat.Zi /= maxMode;
 
 			printf_simplify("Point: %4d, Feat: %4d, Zr: %lf, Zi: %lf\n",
-				i, fNum, zFeatPtr->feat.Zr, zFeatPtr->feat.Zi);
+				i, fNum, featPtr->feat.Zr, featPtr->feat.Zi);
 
-			zFeatPtr += featNum;
+			featPtr += featNum;
 		}
 	}
 }
 
 
 int
-describeZernike(unsigned char* img, unsigned char* imgMark, Feat* zFeat, int width, int height, int window, int orderMax)
+describeZernike(unsigned char* img, unsigned char* imgMark, zFeat* feats, int width, int height, int window, int orderMax)
 {
 	int	i = 0;
 	int startPoint = width * window / 2 + window / 2;
@@ -85,9 +85,9 @@ describeZernike(unsigned char* img, unsigned char* imgMark, Feat* zFeat, int wid
 				}
 
 				Complex z = Zernike(orderN, orderM, window, &img[i], width);
-				zFeat[pNumCounter * featNum + fNum].feat = z;
-				zFeat[pNumCounter * featNum + fNum].x = x;
-				zFeat[pNumCounter * featNum + fNum].y = y;
+				feats[pNumCounter * featNum + fNum].feat = z;
+				feats[pNumCounter * featNum + fNum].x = x;
+				feats[pNumCounter * featNum + fNum].y = y;
 				fNum++;
 
 				printf_simplify("fNum = %4d, n = %4d, m = %4d; shi:%lf, xu:%lf, mode:%lf\n", fNum, orderN, orderM, z.Zr, z.Zi, z.Mode);
@@ -101,7 +101,7 @@ describeZernike(unsigned char* img, unsigned char* imgMark, Feat* zFeat, int wid
 	printf_detailed("actPointNum = %d\n\n", actPointNum);
 
 	/*------------------- Normalization ---------------------*/
-	normalZernikeFeat(zFeat, actPointNum, featNum);
+	normalZernikeFeat(feats, actPointNum, featNum);
 
 	return actPointNum;
 }
@@ -109,32 +109,32 @@ describeZernike(unsigned char* img, unsigned char* imgMark, Feat* zFeat, int wid
 
 
 double 
-matchZernike(Feat* pointsL, int matchNum, Feat* pointsR, int pointRNum, int featNum, MatchCouple* pairs) {
+matchZernike(zFeat* featsL, int matchNum, zFeat* featsR, int pointRNum, int featNum, MatchCouple* couple) {
 	int LeftNum, rightNum;
 	int matchRightNum;
 
 	double zModeDist = 0.0;
 	double minZModeDist = 1000.0;
 
-	Feat* pointsLHead = pointsL;
-	Feat* pointsRHead = pointsR;
+	zFeat* pointsLHead = featsL;
+	zFeat* pointsRHead = featsR;
 
 	for (LeftNum = 0; LeftNum < matchNum; ++LeftNum) {
 		for (rightNum = 0; rightNum < pointRNum; ++rightNum) {
-			zModeDist = calcZernikeModeDist(pointsL, pointsR, featNum);
+			zModeDist = calcZernikeModeDist(featsL, featsR, featNum);
 
 			if (zModeDist < minZModeDist) {
 				minZModeDist = zModeDist;
 				matchRightNum = rightNum;
 			}
 			printf_simplify("L: %4d, R: %4d, zModeDist: %lf\n", LeftNum, rightNum, zModeDist);
-			pointsR += featNum;
+			featsR += featNum;
 		}
 
-		addZernikeNewPair(pairs++, LeftNum, matchRightNum, &pointsLHead[featNum * LeftNum], &pointsRHead[featNum * matchRightNum]);
+		addZernikeNewPair(couple++, LeftNum, matchRightNum, &pointsLHead[featNum * LeftNum], &pointsRHead[featNum * matchRightNum]);
 
-		pointsR -= pointRNum * featNum;
-		pointsL += featNum;
+		featsR -= pointRNum * featNum;
+		featsL += featNum;
 		minZModeDist = 1000.0;
 		matchRightNum = 0;
 	}
@@ -144,7 +144,7 @@ matchZernike(Feat* pointsL, int matchNum, Feat* pointsR, int pointRNum, int feat
 
 
 double 
-calcZernikeModeDist(Feat* pointL, Feat* pointR, int featNum) {
+calcZernikeModeDist(zFeat* featL, zFeat* featR, int featNum) {
 	int i;
 
 	double zModeDist = 0.0;
@@ -159,10 +159,10 @@ calcZernikeModeDist(Feat* pointL, Feat* pointR, int featNum) {
 		//        modeDist = modeL - modeR;
 		//        zModeDist += modeDist * modeDist;
 
-		modeL_zi = pointL[i].feat.Zi;
-		modeL_zr = pointL[i].feat.Zr;
-		modeR_zi = pointR[i].feat.Zi;
-		modeR_zr = pointR[i].feat.Zr;
+		modeL_zi = featL[i].feat.Zi;
+		modeL_zr = featL[i].feat.Zr;
+		modeR_zi = featR[i].feat.Zi;
+		modeR_zr = featR[i].feat.Zr;
 
 		modeDist = modeL_zi - modeR_zi;
 		zModeDist += modeDist * modeDist;
@@ -177,44 +177,56 @@ calcZernikeModeDist(Feat* pointL, Feat* pointR, int featNum) {
 
 
 void 
-addZernikeNewPair(MatchCouple* pairs, int L_i, int R_j, Feat* pointL, Feat* pointR) 
+addZernikeNewPair(MatchCouple* pairs, int L_i, int R_j, zFeat* featsL, zFeat* featsR) 
 {
 	static int num = 0;
 
-	pairs->Lx= pointL->x;
-	pairs->Ly = pointL->y;
-	pairs->Rx = pointR->x;
-	pairs->Ry = pointR->y;
+	pairs->Lx= featsL->x;
+	pairs->Ly = featsL->y;
+	pairs->Rx = featsR->x;
+	pairs->Ry = featsR->y;
 
 	printf_simplify("Pair %4d X,Y: (%4d, %4d), (%4d, %4d)\n",num++, pairs->Lx, pairs->Ly, pairs->Rx, pairs->Ry);
 }
 
 
 // Get zernike feat
-void
-getZernikeFeat
+int
+matchByZernike
 (
-unsigned char* leftImg,
-unsigned char* rightImg,
+std::pair<unsigned char*, unsigned char*> imgPair,
+std::pair<unsigned char*, unsigned char*> imgMarkPair,
+std::pair<int, int> pointNum,
 int orderMax,
 int window,
 int width,
 int height,
-int leftPointNum,
-int rightPointNum,
-unsigned char* leftImgMark,
-unsigned char* rightImgMark,
-pMatchCouple couple,
-int* pMatchNum
+pMatchCouple* couple
 )
 {
+	unsigned char* leftImg = imgPair.first;
+	unsigned char* rightImg = imgPair.second;
+	unsigned char* leftImgMark = imgMarkPair.first;
+	unsigned char* rightImgMark = imgMarkPair.second;
+	int leftPointNum = pointNum.first;
+	int rightPointNum = pointNum.second;
+
+	// get feature
 	int featNum = calcFeatNum(orderMax);
+	zFeat* featsL = (zFeat*)calloc_check(leftPointNum * featNum, sizeof(zFeat));
+	int actLeftPointNum = describeZernike(leftImg, leftImgMark, featsL, width, height, window, orderMax);
+	zFeat* featsR = (zFeat*)calloc_check(rightPointNum * featNum, sizeof(zFeat));
+	int actRightPointNum = describeZernike(rightImg, rightImgMark, featsR, width, height, window, orderMax);
 
-	Feat* zFeatL = (Feat*)calloc_check(leftPointNum * featNum, sizeof(Feat));
-	int actLeftPointNum = describeZernike(leftImg, leftImgMark, zFeatL, width, height, window, orderMax);
-	Feat* zFeatR = (Feat*)calloc_check(rightPointNum * featNum, sizeof(Feat));
-	int actRightPointNum = describeZernike(rightImg, rightImgMark, zFeatR, width, height, window, orderMax);
+	// match 
+	int matchNum = MIN(actLeftPointNum, actRightPointNum);
+	*couple = (pMatchCouple)calloc_check(matchNum, sizeof(MatchCouple));
+	matchZernike(featsL, matchNum, featsR, actRightPointNum, featNum, *couple);
 
-	*pMatchNum = MIN(actLeftPointNum, actRightPointNum); 
-	matchZernike(zFeatL, *pMatchNum, zFeatR, actRightPointNum, featNum, couple);
+	// free unneeded memory
+	free(featsL);
+	free(featsR);
+
+	// return matched points
+	return matchNum;
 }

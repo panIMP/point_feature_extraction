@@ -5,6 +5,14 @@
 #include <stdio.h>
 
 
+typedef struct _MATCH_COUPLE {
+	short Lx;
+	short Ly;
+	short Rx;
+	short Ry;
+}MatchCouple, *pMatchCouple;
+
+
 // Debug control
 #define DEBUG   0
 

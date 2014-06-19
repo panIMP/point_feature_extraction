@@ -74,6 +74,28 @@ double binaryThresh
 }
 
 
+/*OpenCV method to find the interest points by using surf*/
+void 
+opencvSurf
+(
+void
+)
+{
+	cv::Mat  image, image1 = cv::imread("E:/Pics/Images/view1_gray.jpg");
+	//�Ҷȱ任
+	cv::cvtColor(image1, image, CV_BGR2GRAY);
+	std::vector<cv::KeyPoint> keypoints;
+	cv::SurfFeatureDetector surf(2500);
+	surf.detect(image, keypoints);
+	cv::drawKeypoints(image, keypoints, image, cv::Scalar::all(255), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+	cv::namedWindow("surf");
+	cv::imshow("surf", image);
+	cv::imwrite("E:/Pics/Results/opencvsurf.jpg", image);
+	cv::waitKey(0);
+}
+
+
 /*Create the integral image of input image*/
 void
 createIntImg
@@ -84,27 +106,27 @@ int width,
 int height
 )
 {
-	double* imgPtr = imgInt + width + 1 + 1;
+	double* imgIntPtr = imgInt + width + 1 + 1;
 
-	*imgPtr = *img;
+	*imgIntPtr = *img;
 	
-	imgPtr++;
+	imgIntPtr++;
 	img++;
 
-	for (int x = 1; x < width; ++x, ++imgPtr, ++img)
+	for (int x = 1; x < width; ++x, ++imgIntPtr, ++img)
 	{
-		*imgPtr = *img + *(imgPtr - 1);
+		*imgIntPtr = *img + *(imgIntPtr - 1);
 	}
 
 	for (int y = 1; y < height; ++y)
 	{
 		int sum = 0;
-		imgPtr = imgInt + (y + 1) * (width + 1) + 1;
+		imgIntPtr = imgInt + (y + 1) * (width + 1) + 1;
 
-		for (int x = 0; x < width; ++x, ++img, ++imgPtr)
+		for (int x = 0; x < width; ++x, ++img, ++imgIntPtr)
 		{
 			sum += *img;
-			*imgPtr = *(imgPtr - width - 1) + sum;
+			*imgIntPtr = *(imgIntPtr - width - 1) + sum;
 		}
 	}
 }
@@ -551,7 +573,7 @@ const int* hesTempl
 			interPointNum++;
 	}
 
-
+	// free unused memory
 	free(imgInt);
 	free(imgHesPyr);
 	free(imgMarkTmp);
