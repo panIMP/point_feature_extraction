@@ -14,7 +14,7 @@ typedef struct _MATCH_COUPLE {
 
 
 // Debug control
-#define DEBUG   0
+#define DEBUG   1
 
 
 // Debug macros
@@ -48,3 +48,23 @@ void *__cdecl calloc_check(size_t _NumOfElements, size_t _SizeOfElements);
 
 // Solve the 3X3 hessin -- A * X = B
 void solve3_3(const double* A, const double* B, double* result);
+
+
+/*Create the integral image of input image*/
+void
+createIntImg
+(
+unsigned char* img,
+double*	imgInt,
+int width,
+int height
+);
+
+void
+createIntImg
+(
+unsigned long long* img,
+double*	imgInt,
+int width,
+int height
+);

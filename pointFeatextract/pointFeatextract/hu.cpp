@@ -1,7 +1,7 @@
 #include "hu.h"
 #include "stdfunc.h"
 #include <math.h>
-
+#include <string.h>
 
 
 /*Create sevaral integral image of input image*/
@@ -14,129 +14,41 @@ int width,
 int height
 )
 {
-	// the size of every int image is (width + 1, height + 1) to deal with the subtraction while at edge
-	int widthInt = width + 1;
-	int heightInt = height + 1;
-	int fullSizeInt = widthInt * heightInt;
+	// size of the init image and integral image
+	int fullSize = width * height;
+	int fullSizeInt = (width + 1) * (height + 1);
 
-	// the first effective pixel position of every int image
-	double* imgIntX0Y0Ptr = imgInt + widthInt + 1;
-	double* imgIntX1Y0Ptr = imgIntX0Y0Ptr + fullSizeInt;
-	double* imgIntX0Y1Ptr = imgIntX1Y0Ptr + fullSizeInt;
-	double* imgIntX2Y0Ptr = imgIntX0Y1Ptr + fullSizeInt;
-	double* imgIntX0Y2Ptr = imgIntX2Y0Ptr + fullSizeInt;
-	double* imgIntX1Y1Ptr = imgIntX0Y2Ptr + fullSizeInt;
-	double* imgIntX3Y0Ptr = imgIntX1Y1Ptr + fullSizeInt;
-	double* imgIntX2Y1Ptr = imgIntX3Y0Ptr + fullSizeInt;
-	double* imgIntX1Y2Ptr = imgIntX2Y1Ptr + fullSizeInt;
-	double* imgIntX0Y3Ptr = imgIntX1Y2Ptr + fullSizeInt;
+	unsigned long long* imgTmp = (unsigned long long*)calloc_check(fullSize, sizeof(unsigned long long));
 
-	// only imgIntX0Y0 is not zero, others are zero since x == 0 && y == 0
-	*imgIntX0Y0Ptr = *img;
-
-	// move further every pointer
-	img++;
-
-	imgIntX0Y0Ptr++;
-	imgIntX1Y0Ptr++;
-	imgIntX0Y1Ptr++;
-	imgIntX2Y0Ptr++;
-	imgIntX0Y2Ptr++;
-	imgIntX1Y1Ptr++;
-	imgIntX3Y0Ptr++;
-	imgIntX2Y1Ptr++;
-	imgIntX1Y2Ptr++;
-	imgIntX0Y3Ptr++;
-
-	// calculate the integral images of the first row
-	for (int x = 1; x < width; ++x, ++imgIntX0Y0Ptr, ++img)
+	int seq = 0;
+	for (int xOrder = 0; xOrder <= 3; ++xOrder)
 	{
-		// y == 0 in the first row of img (not imgInt!)
-		*imgIntX0Y0Ptr = *img + *(imgIntX0Y0Ptr - 1);
-		*imgIntX1Y0Ptr = *img + *(imgIntX1Y0Ptr - 1) * x;
-		*imgIntX0Y1Ptr = *img + *(imgIntX0Y1Ptr - 1) * 0;
-		*imgIntX2Y0Ptr = *img + *(imgIntX2Y0Ptr - 1) * x * x;
-		*imgIntX0Y2Ptr = *img + *(imgIntX0Y2Ptr - 1) * 0 * 0;
-		*imgIntX1Y1Ptr = *img + *(imgIntX1Y1Ptr - 1) * x * 0;
-		*imgIntX3Y0Ptr = *img + *(imgIntX3Y0Ptr - 1) * x * x * x;
-		*imgIntX2Y1Ptr = *img + *(imgIntX2Y1Ptr - 1) * x * x * 0;
-		*imgIntX1Y2Ptr = *img + *(imgIntX1Y2Ptr - 1) * x * 0 * 0;
-		*imgIntX0Y3Ptr = *img + *(imgIntX0Y3Ptr - 1) * 0 * 0 * 0;
-	}
-
-	for (int y = 1; y < height; ++y)
-	{
-		int sumX0Y0 = 0;
-		int sumX1Y0 = 0;
-		int sumX0Y1 = 0;
-		int sumX2Y0 = 0;
-		int sumX0Y2 = 0;
-		int sumX1Y1 = 0;
-		int sumX3Y0 = 0;
-		int sumX2Y1 = 0;
-		int sumX1Y2 = 0;
-		int sumX0Y3 = 0;
-
-		imgIntX0Y0Ptr = imgInt + (y + 1) * (width + 1) + 1;
-		imgIntX1Y0Ptr = imgIntX0Y0Ptr + fullSizeInt;
-		imgIntX0Y1Ptr = imgIntX1Y0Ptr + fullSizeInt;
-		imgIntX2Y0Ptr = imgIntX0Y1Ptr + fullSizeInt;
-		imgIntX0Y2Ptr = imgIntX2Y0Ptr + fullSizeInt;
-		imgIntX1Y1Ptr = imgIntX0Y2Ptr + fullSizeInt;
-		imgIntX3Y0Ptr = imgIntX1Y1Ptr + fullSizeInt;
-		imgIntX2Y1Ptr = imgIntX3Y0Ptr + fullSizeInt;
-		imgIntX1Y2Ptr = imgIntX2Y1Ptr + fullSizeInt;
-		imgIntX0Y3Ptr = imgIntX1Y2Ptr + fullSizeInt;
-
-		for (int x = 0; x < width; ++x)
+		for (int yOrder = 0; yOrder <= 3; ++yOrder)
 		{
-			sumX0Y0 += *img;
-			*imgIntX0Y0Ptr = *(imgIntX0Y0Ptr - width - 1) + sumX0Y0;
+			// only calculate: x0y0, x0y1, x0y2, x0y3, x1y0, x1y1, x1y2, x2y0, x2y1, x3y0
+			if (xOrder + yOrder > 3)
+				continue;
 
-			sumX1Y0 += *img * x;
-			*imgIntX1Y0Ptr = *(imgIntX1Y0Ptr - width - 1) + sumX1Y0;
+			// Step 1. construct a image that are used as img, x*img, y*img, x*y*img,...
+			for (int i = 0; i < fullSize; ++i)
+			{
+				int x = i % width;
+				int y = i / width;
 
-			sumX0Y1 += *img * y;
-			*imgIntX0Y1Ptr = *(imgIntX0Y1Ptr - width - 1) + sumX0Y1;
+				imgTmp[i] = pow((double)x, xOrder) * pow((double)y, yOrder) * img[i];
+			}
 
-			sumX2Y0 += *img * x * x;
-			*imgIntX2Y0Ptr = *(imgIntX2Y0Ptr - width - 1) + sumX2Y0;
-
-			sumX0Y2 += *img * y * y;
-			*imgIntX0Y2Ptr = *(imgIntX0Y2Ptr - width - 1) + sumX0Y2;
-
-			sumX1Y1 += *img * x * y;
-			*imgIntX1Y1Ptr = *(imgIntX1Y1Ptr - width - 1) + sumX1Y1;
-
-			sumX3Y0 += *img * x * x * x;
-			*imgIntX3Y0Ptr = *(imgIntX3Y0Ptr - width - 1) + sumX3Y0;
-
-			sumX2Y1 += *img * x * x * y;
-			*imgIntX2Y1Ptr = *(imgIntX2Y1Ptr - width - 1) + sumX2Y1;
-
-			sumX1Y2 += *img * x * y * y;
-			*imgIntX1Y2Ptr = *(imgIntX1Y2Ptr - width - 1) + sumX1Y2;
-
-			sumX0Y3 += *img * y * y * y;
-			*imgIntX0Y3Ptr = *(imgIntX0Y3Ptr - width - 1) + sumX0Y3;
-
-
-			// increment pointers
-			img++;
-
-			imgIntX0Y0Ptr++;
-			imgIntX1Y0Ptr++;
-			imgIntX0Y1Ptr++;
-			imgIntX2Y0Ptr++;
-			imgIntX0Y2Ptr++;
-			imgIntX1Y1Ptr++;
-			imgIntX3Y0Ptr++;
-			imgIntX2Y1Ptr++;
-			imgIntX1Y2Ptr++;
-			imgIntX0Y3Ptr++;
+			// Step 2. construct the corresponding integral image
+			createIntImg(imgTmp, imgInt + seq * fullSizeInt, width, height);
+			
+			// Step 3. point to the next integral image
+			seq++;
 		}
 	}
+
+	free(imgTmp);
 }
+
 
 
 /*Get the hu matrix by appointed window of the appointed image, imgInt is the integral image of source image*/
@@ -162,15 +74,15 @@ int height
 
 	// the first effective pixel position of every int image
 	double* imgIntX0Y0Ptr = imgInt;
-	double* imgIntX1Y0Ptr = imgIntX0Y0Ptr + fullSizeInt;
-	double* imgIntX0Y1Ptr = imgIntX1Y0Ptr + fullSizeInt;
-	double* imgIntX2Y0Ptr = imgIntX0Y1Ptr + fullSizeInt;
-	double* imgIntX0Y2Ptr = imgIntX2Y0Ptr + fullSizeInt;
-	double* imgIntX1Y1Ptr = imgIntX0Y2Ptr + fullSizeInt;
-	double* imgIntX3Y0Ptr = imgIntX1Y1Ptr + fullSizeInt;
-	double* imgIntX2Y1Ptr = imgIntX3Y0Ptr + fullSizeInt;
-	double* imgIntX1Y2Ptr = imgIntX2Y1Ptr + fullSizeInt;
-	double* imgIntX0Y3Ptr = imgIntX1Y2Ptr + fullSizeInt;
+	double* imgIntX0Y1Ptr = imgIntX0Y0Ptr + fullSizeInt;
+	double* imgIntX0Y2Ptr = imgIntX0Y1Ptr + fullSizeInt;
+	double* imgIntX0Y3Ptr = imgIntX0Y2Ptr + fullSizeInt;
+	double* imgIntX1Y0Ptr = imgIntX0Y3Ptr + fullSizeInt;
+	double* imgIntX1Y1Ptr = imgIntX1Y0Ptr + fullSizeInt;
+	double* imgIntX1Y2Ptr = imgIntX1Y1Ptr + fullSizeInt;
+	double* imgIntX2Y0Ptr = imgIntX1Y2Ptr + fullSizeInt;
+	double* imgIntX2Y1Ptr = imgIntX2Y0Ptr + fullSizeInt;
+	double* imgIntX3Y0Ptr = imgIntX2Y1Ptr + fullSizeInt;
 
 	// district that can calculate feature
 	int dist = window / 2;
@@ -191,10 +103,10 @@ int height
 				continue;
 
 			// four corners of the window which (x,y) is the center in the integral image
-			int pLT = (y - dist) * widthInt + x - dist + 1;
+			int pLT = (y - dist) * widthInt + x - dist;
 			int pRT = (y - dist) * widthInt + x + dist + 1;
-			int pLB = (y + dist) * widthInt + x - dist + 1;
-			int pRB = (y + dist) * widthInt + x + dist + 1;
+			int pLB = (y + dist + 1) * widthInt + x - dist;
+			int pRB = (y + dist + 1) * widthInt + x + dist + 1;
 
 			// calculate n moments
 			double m00 = imgIntX0Y0Ptr[pRB] - imgIntX0Y0Ptr[pLB] - imgIntX0Y0Ptr[pRT] + imgIntX0Y0Ptr[pLT];
@@ -208,20 +120,18 @@ int height
 			double m12 = imgIntX1Y2Ptr[pRB] - imgIntX1Y2Ptr[pLB] - imgIntX1Y2Ptr[pRT] + imgIntX1Y2Ptr[pLT];
 			double m03 = imgIntX0Y3Ptr[pRB] - imgIntX0Y3Ptr[pLB] - imgIntX0Y3Ptr[pRT] + imgIntX0Y3Ptr[pLT];
 
-			double xEven = m10 / (m00 + 0.000001);
-			double yEven = m01 / (m00 + 0.000001);
+			double xEven = m10 / (m00);
+			double yEven = m01 / (m00);
 
 			// calculate ¦Ì00, ¦Ì01, ¦Ì10, ...
 			double u00 = m00;
-			double u10 = m10 - xEven * m00;
-			double u01 = m01 - yEven * m00;
 			double u20 = m20 - 2 * xEven * m10 + xEven * xEven * m00;
 			double u11 = m11 - xEven * m01 - yEven * m10 + xEven * yEven * m00;
 			double u02 = m02 - 2 * yEven * m01 + yEven * yEven * m00;
-			double u30 = m30 - 3 * xEven * m20 + 3 * xEven * xEven * m10 - xEven * xEven * xEven;
-			double u21 = m21 - 2 * xEven * m11 + xEven * xEven * m01 - yEven * m20 + 2 * xEven * yEven * m10 - xEven * xEven * yEven;
-			double u12 = m12 - 2 * yEven * m11 + yEven * yEven * m10 - xEven * m02 + 2 * yEven * yEven * m01 - yEven * yEven * xEven;
-			double u03 = m03 - 3 * yEven * m02 + 3 * yEven * yEven * m01 - yEven * yEven * yEven;
+			double u30 = m30 - 3 * xEven * m20 + 3 * xEven * xEven * m10 - xEven * xEven * xEven * m00;
+			double u21 = m21 - 2 * xEven * m11 + xEven * xEven * m01 - yEven * m20 + 2 * xEven * yEven * m10 - xEven * xEven * yEven * m00;
+			double u12 = m12 - 2 * yEven * m11 + yEven * yEven * m10 - xEven * m02 + 2 * yEven * xEven * m01 - yEven * yEven * xEven * m00;
+			double u03 = m03 - 3 * yEven * m02 + 3 * yEven * yEven * m01 - yEven * yEven * yEven * m00;
 
 			// calculate n11, n12, n21, ...
 			double u00sqrt = sqrt(u00);
@@ -235,7 +145,7 @@ int height
 			double n03 = u03 / (u00square * u00sqrt);
 
 			// calculte hu-moments: M1, M2, M3, ...
-			double M1 = n20 + n02;
+			/*double M1 = n20 + n02;
 			double M2 = pow(n20 - n02, 2) + 4 * n11 * n11;
 			double M3 = pow(n30 - 3 * n12, 2) + pow(3 * n21 - n03, 2);
 			double M4 = pow(n30 + n12, 2) + pow(n21 + n03, 2);
@@ -243,17 +153,28 @@ int height
 						(3 * n21 - n03)*(n21 + n03)*(3 * pow(n12 + n30, 2) - pow(n21 + n03, 2));
 			double M6 = (n20 - n02)*(pow(n30 + n12, 2) - pow(n21 + n03, 2)) + 4 * n11 * (n30 + n12) * (n21 + n03);
 			double M7 = (3 * n21 - n03) * (n30 + n12) * (pow(n30 + n12, 2) - 3 * pow(n21 + n03, 2)) -
-						(n30 - 3 * n12) * (n21 + n03) * (3 * pow(n30 + n12, 2) - pow(n21 + n03, 2));
+						(n30 - 3 * n12) * (n21 + n03) * (3 * pow(n30 + n12, 2) - pow(n21 + n03, 2));*/
+			double M1 = n20;
+			double M2 = n02;
+			double M3 = n11;
+			double M4 = n30;
+			double M5 = n21;
+			double M6 = n12;
+			double M7 = n03;
 
 			// store the feature 
 			huMoment moment = { M1, M2, M3, M4, M5, M6, M7 };
 			huFeat feat = { moment, x, y };
 			feats[actPointNum] = feat;
 
+			// print it, for debug
+			printf_simplify("Interest Point %d :(%3d, %3d) : (%e, %e, %e, %e, %e, %e, %e)\n", actPointNum, x, y, M1, M2, M3, M4, M5, M6, M7);
+
 			actPointNum++;
 		}
 	}
 
+	printf_simplify("%d interest points are described\n\n", actPointNum);
 
 	return actPointNum;
 }

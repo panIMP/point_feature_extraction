@@ -1,6 +1,7 @@
 #include "imageIO.h"
 #include "pointLocate.h"
 #include "zernikeMatch.h"
+#include "huMatch.h"
 #include "stdfunc.h"
 #include <iostream>
 
@@ -14,7 +15,7 @@ main(int argc, char* argv[])
 	// Image Load and Display Stage
 	std::string srcFolder = "E:/Pics/Images/";
 	std::string dstFolder = "E:/Pics/Results/";
-	std::pair<cv::Mat, cv::Mat> imgMatPair = displayInit(srcFolder + "d.jpg", srcFolder + "d.jpg", dstFolder + "match.jpg");
+	std::pair<cv::Mat, cv::Mat> imgMatPair = displayInit(srcFolder + "view1_gray.jpg", srcFolder + "view2_gray.jpg", dstFolder + "match.jpg");
 	cv::Mat leftImgMat = imgMatPair.first;
 	cv::Mat rightImgMat = imgMatPair.second;
 	unsigned char* leftImg = leftImgMat.data;
@@ -37,14 +38,15 @@ main(int argc, char* argv[])
 	std::pair<int, int> pointNumPair = std::make_pair(leftPointNum, rightPointNum);
 
 	// Get feat and match feat
-	// Method 1: use zernike descriptors
 	pMatchCouple couple = NULL;
 	int matchNum = 0;
-	matchNum = matchByZernike(imgPair, imgMarkPair, pointNumPair, 4, 15, width, height, &couple);
+	// Method 1: use zernike descriptors
+	//matchNum = matchByZernike(imgPair, imgMarkPair, pointNumPair, &couple, 4, 15, width, height);
+	// Method 2: usse hu-moment descriptors
+	matchNum = matchByHu(imgPair, imgMarkPair, pointNumPair, &couple, 10, width, height);
 
 	// Result Display Stage
 	displayResult(imgMatPair, imgMarkPair, couple, matchNum, dstFolder + "left.jpg", dstFolder + "right.jpg", dstFolder + "matchResult.jpg");
-
 
 	// Free unused memory
 	if (couple != NULL)

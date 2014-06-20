@@ -23,17 +23,6 @@ double binaryThresh
 );
 
 
-/*Create the integral image of input image*/
-void
-createIntImg
-(
-unsigned char* img,
-double*	imgInt,
-int width,
-int height
-);
-
-
 /*Generate the hessin-pyramid*/
 void
 createHessinPyramid

@@ -197,11 +197,11 @@ matchByZernike
 std::pair<unsigned char*, unsigned char*> imgPair,
 std::pair<unsigned char*, unsigned char*> imgMarkPair,
 std::pair<int, int> pointNum,
+pMatchCouple* couple,
 int orderMax,
 int window,
 int width,
-int height,
-pMatchCouple* couple
+int height
 )
 {
 	unsigned char* leftImg = imgPair.first;

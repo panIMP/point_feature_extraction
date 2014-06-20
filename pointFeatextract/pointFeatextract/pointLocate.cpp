@@ -96,42 +96,6 @@ void
 }
 
 
-/*Create the integral image of input image*/
-void
-createIntImg
-(
-unsigned char* img,
-double*	imgInt,
-int width,
-int height
-)
-{
-	double* imgIntPtr = imgInt + width + 1 + 1;
-
-	*imgIntPtr = *img;
-	
-	imgIntPtr++;
-	img++;
-
-	for (int x = 1; x < width; ++x, ++imgIntPtr, ++img)
-	{
-		*imgIntPtr = *img + *(imgIntPtr - 1);
-	}
-
-	for (int y = 1; y < height; ++y)
-	{
-		int sum = 0;
-		imgIntPtr = imgInt + (y + 1) * (width + 1) + 1;
-
-		for (int x = 0; x < width; ++x, ++img, ++imgIntPtr)
-		{
-			sum += *img;
-			*imgIntPtr = *(imgIntPtr - width - 1) + sum;
-		}
-	}
-}
-
-
 /*Calculate thresh for edge suppression*/
 static double calcEdgeSupprThresh(double r)
 {
