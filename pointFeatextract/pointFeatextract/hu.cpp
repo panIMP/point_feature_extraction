@@ -18,7 +18,7 @@ int height
 	int fullSize = width * height;
 	int fullSizeInt = (width + 1) * (height + 1);
 
-	unsigned long long* imgTmp = (unsigned long long*)calloc_check(fullSize, sizeof(unsigned long long));
+	double* imgTmp = (double*)calloc_check(fullSize, sizeof(double));
 
 	int seq = 0;
 	for (int xOrder = 0; xOrder <= 3; ++xOrder)
@@ -35,7 +35,7 @@ int height
 				int x = i % width;
 				int y = i / width;
 
-				imgTmp[i] = pow((double)x, xOrder) * pow((double)y, yOrder) * img[i];
+				imgTmp[i] = pow((double)x, xOrder) * pow((double)y, yOrder) * (double)img[i];
 			}
 
 			// Step 2. construct the corresponding integral image
@@ -63,14 +63,14 @@ int width,
 int height
 )
 {
-	// 10 integral image: x0y0, x1y0, x0y1, x2y0, x0y2, x1y1, x3y0, x2y1, x1y2, x0y3 and calculate them
-	double* imgInt = (double*)calloc_check((width + 1) * (height + 1) * 10, sizeof(double));
-	createIntSImg(img, imgInt, width, height);
-
 	// image size information
 	int widthInt = width + 1;
 	int heightInt = height + 1;
 	int fullSizeInt = widthInt * heightInt;
+
+	// 10 integral image: x0y0, x1y0, x0y1, x2y0, x0y2, x1y1, x3y0, x2y1, x1y2, x0y3 and calculate them
+	double* imgInt = (double*)calloc_check(fullSizeInt * 10, sizeof(double));
+	createIntSImg(img, imgInt, width, height);
 
 	// the first effective pixel position of every int image
 	double* imgIntX0Y0Ptr = imgInt;
@@ -168,7 +168,8 @@ int height
 			feats[actPointNum] = feat;
 
 			// print it, for debug
-			printf_simplify("Interest Point %d :(%3d, %3d) : (%e, %e, %e, %e, %e, %e, %e)\n", actPointNum, x, y, M1, M2, M3, M4, M5, M6, M7);
+			printf_simplify("Interest Point %3d :(%3d, %3d) : (%e, %e, %e, %e, %e, %e, %e)\n", 
+				actPointNum, x, y, M1, M2, M3, M4, M5, M6, M7);
 
 			actPointNum++;
 		}

@@ -43,7 +43,7 @@ main(int argc, char* argv[])
 	// Method 1: use zernike descriptors
 	//matchNum = matchByZernike(imgPair, imgMarkPair, pointNumPair, &couple, 4, 15, width, height);
 	// Method 2: usse hu-moment descriptors
-	matchNum = matchByHu(imgPair, imgMarkPair, pointNumPair, &couple, 10, width, height);
+	matchNum = matchByHu(imgPair, imgMarkPair, pointNumPair, &couple, 15, width, height);
 
 	// Result Display Stage
 	displayResult(imgMatPair, imgMarkPair, couple, matchNum, dstFolder + "left.jpg", dstFolder + "right.jpg", dstFolder + "matchResult.jpg");

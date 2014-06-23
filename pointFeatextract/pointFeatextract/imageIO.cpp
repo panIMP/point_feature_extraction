@@ -13,8 +13,8 @@ std::string mergeImgStr
 	cv::Mat leftImg = cv::imread(leftImgStr, cv::IMREAD_GRAYSCALE);
 	cv::Mat rightImg = cv::imread(rightImgStr, cv::IMREAD_GRAYSCALE);
 
-	//cv::Mat leftImg = cv::Mat(10, 10, CV_8UC1, cv::Scalar(1));
-	//cv::Mat rightImg = cv::Mat(10, 10, CV_8UC1, cv::Scalar(1));
+	//cv::Mat leftImg = cv::Mat(20, 20, CV_8UC1, cv::Scalar(255));
+	//cv::Mat rightImg = cv::Mat(20, 20, CV_8UC1, cv::Scalar(255));
 
 	std::pair<cv::Mat, cv::Mat> imgPair = std::make_pair(leftImg, rightImg);
 

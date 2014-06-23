@@ -85,7 +85,8 @@ matchHu(std::pair<huFeat*, huFeat*>feats, std::pair<int, int> pointNum, pMatchCo
 		// if (i, matchJ) == (matchI, matchJ), then the two points are coupled
 		if (matchI == i)
 		{
-			addHuNewPair(couples++, featsL + i, featsR + matchJ);
+			printf("Left %d is Matched to Right %3d ", matchI, matchJ);
+			addHuNewPair(couples++, featsL + matchI, featsR + matchJ);
 			matchNum++;
 		}
 

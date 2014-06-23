@@ -98,7 +98,7 @@ int height
 void
 createIntImg
 (
-unsigned long long* img,
+double* img,
 double*	imgInt,
 int width,
 int height
@@ -118,13 +118,19 @@ int height
 
 	for (int y = 1; y < height; ++y)
 	{
-		int sum = 0;
+		double sum = 0;
 		imgIntPtr = imgInt + (y + 1) * (width + 1) + 1;
 
 		for (int x = 0; x < width; ++x, ++img, ++imgIntPtr)
 		{
 			sum += *img;
 			*imgIntPtr = *(imgIntPtr - width - 1) + sum;
+
+			// For overstep the boundary debug
+			if (*imgIntPtr < 0)
+			{
+				*imgIntPtr = 0;
+			}
 		}
 	}
 }

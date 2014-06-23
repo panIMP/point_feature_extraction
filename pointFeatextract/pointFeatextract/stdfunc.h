@@ -63,7 +63,7 @@ int height
 void
 createIntImg
 (
-unsigned long long* img,
+double* img,
 double*	imgInt,
 int width,
 int height
