@@ -103,15 +103,15 @@ std::string mergeResultStr
 
 	if (couple != NULL)
 	{
-		for (int i = 0; i < matchNum; i += 3) {
+		for (int i = 0; i < matchNum; i += 3) 
 			cv::line(merge, cv::Point(couple[i].Lx, couple[i].Ly), cv::Point(couple[i].Rx + leftMerge.cols, couple[i].Ry), cv::Scalar(255, 0, 0));
-		}
-		for (int i = 1; i < matchNum; i += 3) {
+		
+		for (int i = 1; i < matchNum; i += 3) 
 			cv::line(merge, cv::Point(couple[i].Lx, couple[i].Ly), cv::Point(couple[i].Rx + leftMerge.cols, couple[i].Ry), cv::Scalar(0, 255, 0));
-		}
-		for (int i = 2; i < matchNum; i += 3) {
+		
+		for (int i = 2; i < matchNum; i += 3) 
 			cv::line(merge, cv::Point(couple[i].Lx, couple[i].Ly), cv::Point(couple[i].Rx + leftMerge.cols, couple[i].Ry), cv::Scalar(0, 0, 255));
-		}
+		
 	}
 
 	// Save results

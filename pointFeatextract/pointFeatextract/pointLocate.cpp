@@ -115,7 +115,8 @@ int layerNum,
 const int* hesTempl,
 unsigned char* imgMark,
 int width,
-int height
+int height,
+double thresh
 )
 {
 	for (int oct = 0; oct < octaveNum; ++oct)
@@ -240,27 +241,17 @@ int height
 					imgHesPyr[pixelPos] = hesValue;
 
 					double trH = lxx + lyy;
-					double detH = lxx * lyy - lxy * lxy + 0.000001;
+					double detH = lxx * lyy - lxy * lxy;
 					double ratioH = trH * trH / detH;
-					static double thresh = calcEdgeSupprThresh(10.0);
+					static double ratioThresh = calcEdgeSupprThresh(10.0);
 
-					if ((ratioH < thresh) && (hesValue > 5000))
+					if ((ratioH < ratioThresh) && (hesValue > thresh))
 					{
 						imgMark[y * width + x] = 1;
 					}
 					else
 					{
 						imgMark[y * width + x] = 0;
-					}
-
-					// for debug only
-					if ((lxx != 0) || (lyy != 0) || (lxy != 0))
-					{
-						if (imgHesPyr[pixelPos])
-						{
-							static int count = 0;
-							count++;
-						}
 					}
 				}
 			}
@@ -344,16 +335,23 @@ int height
 	{
 		for (int lay = 1; lay < layerNum - 1; ++lay)
 		{
-			double* imgUp = imgHesPyr + oct * layerNum * width * height + (lay - 1) * width * height;
 			double* imgMid = imgHesPyr + oct * layerNum * width * height + lay * width * height;
-			double* imgDown = imgHesPyr + oct * layerNum * width * height + (lay + 1) * width * height;
+			double* imgUp = imgMid - width*height;
+			double* imgDown = imgMid + width*height;
 
 			int startPos = oct * layerNum * 3 * 26 + lay * 3 * 26;
 
 			int xStart = (hesTempl[startPos + 7] + hesTempl[startPos + 9]) / 2;
 			int yStart = (hesTempl[startPos + 8] + hesTempl[startPos + 10]) / 2;
+
+#if _CIRCLR_NEIGHBOUR
+			xStart++;
+			yStart++;
+#endif
+
 			int xEnd = width - xStart;
 			int yEnd = height - yStart;
+
 
 			for (int y = yStart; y < yEnd; ++y)
 			{
@@ -371,6 +369,7 @@ int height
 					double pUp20 = imgUp[thirdLine - 1];
 					double pUp21 = imgUp[thirdLine];
 					double pUp22 = imgUp[thirdLine + 1];
+
 
 					double pMid00 = imgMid[firstLine - 1];
 					double pMid01 = imgMid[firstLine];
@@ -392,36 +391,78 @@ int height
 					double pDown21 = imgDown[thirdLine];
 					double pDown22 = imgDown[thirdLine + 1];
 
-					/*double pUp00 = abs(imgUp[firstLine - 1]);
-					double pUp01 = abs(imgUp[firstLine]);
-					double pUp02 = abs(imgUp[firstLine + 1]);
-					double pUp10 = abs(imgUp[secondLine - 1]);
-					double pUp11 = abs(imgUp[secondLine]);
-					double pUp12 = abs(imgUp[secondLine + 1]);
-					double pUp20 = abs(imgUp[thirdLine - 1]);
-					double pUp21 = abs(imgUp[thirdLine]);
-					double pUp22 = abs(imgUp[thirdLine + 1]);
+					// extra points around the 8-neighbour
+#if _CIRCLR_NEIGHBOUR
+					double pUp_11 = imgUp[firstLine - width];
+					double pUp1_1 = imgUp[secondLine - 2];
+					double pUp13 = imgUp[secondLine + 2];
+					double pUp31 = imgUp[thirdLine + width];
 
-					double pMid00 = abs(imgMid[firstLine - 1]);
-					double pMid01 = abs(imgMid[firstLine]);
-					double pMid02 = abs(imgMid[firstLine + 1]);
-					double pMid10 = abs(imgMid[secondLine - 1]);
-					double pMid11 = abs(imgMid[secondLine]);
-					double pMid12 = abs(imgMid[secondLine + 1]);
-					double pMid20 = abs(imgMid[thirdLine - 1]);
-					double pMid21 = abs(imgMid[thirdLine]);
-					double pMid22 = abs(imgMid[thirdLine + 1]);
+					double pMid_11 = imgMid[firstLine - width];
+					double pMid1_1 = imgMid[secondLine - 2];
+					double pMid13 = imgMid[secondLine + 2];
+					double pMid31 = imgMid[thirdLine + width];
 
-					double pDown00 = abs(imgDown[firstLine - 1]);
-					double pDown01 = abs(imgDown[firstLine]);
-					double pDown02 = abs(imgDown[firstLine + 1]);
-					double pDown10 = abs(imgDown[secondLine - 1]);
-					double pDown11 = abs(imgDown[secondLine]);
-					double pDown12 = abs(imgDown[secondLine + 1]);
-					double pDown20 = abs(imgDown[thirdLine - 1]);
-					double pDown21 = abs(imgDown[thirdLine]);
-					double pDown22 = abs(imgDown[thirdLine + 1]);*/
+					double pDown_11 = imgDown[firstLine - width];
+					double pDown1_1 = imgDown[secondLine - 2];
+					double pDown13 = imgDown[secondLine + 2];
+					double pDown31 = imgDown[thirdLine + width];
 
+					if ((pMid11 > pMid00) && (pMid11 > pMid01) && (pMid11 > pMid02) && (pMid11 > pMid10)
+						&& (pMid11 > pMid12) && (pMid11 > pMid20) && (pMid11 > pMid21) && (pMid11 > pMid22)
+						&& (pMid11 > pUp00) && (pMid11 > pUp01) && (pMid11 > pUp02) && (pMid11 > pUp10)
+						&& (pMid11 > pUp11) && (pMid11 > pUp12) && (pMid11 > pUp20) && (pMid11 > pUp21) && (pMid11 > pUp22)
+						&& (pMid11 > pDown00) && (pMid11 > pDown01) && (pMid11 > pDown02) && (pMid11 > pDown10) 
+						&& (pMid11 > pDown11) && (pMid11 > pDown12) && (pMid11 > pDown20) && (pMid11 > pDown21) 
+						&& (pMid11 > pDown22)
+						&& (pMid11 > pUp_11) && (pMid11 > pUp1_1) && (pMid11 > pUp13) && (pMid11 > pUp31) 
+						&& (pMid11 > pMid_11) && (pMid11 > pMid1_1) && (pMid11 > pMid13) && (pMid11 > pMid31) 
+						&&(pMid11 > pDown_11) && (pMid11 > pDown1_1) && (pMid11 > pDown13) && (pMid11 > pDown31))
+					{
+						/*A[0] = pMid10 + pMid12 - 2 * pMid11;
+						A[1] = (pMid00 + pMid22 - pMid02 - pMid20) / 4;
+						A[2] = (pUp10 + pDown12 - pUp12 - pDown10) / 4;
+						A[3] = A[1];
+						A[4] = pMid01 + pMid21 - 2 * pMid11;
+						A[5] = (pUp12 + pDown21 - pUp21 - pDown12) / 4;
+						A[6] = A[2];
+						A[7] = A[5];
+						A[8] = pUp11 + pDown11 - 2 * pMid11;
+
+						B[0] = -(pMid12 - pMid10) / 2;
+						B[1] = -(pMid21 - pMid01) / 2;
+						B[2] = -(pDown11 - pUp11) / 2;
+
+						cv::Mat matA = (cv::Mat_<double>(3, 3) << A[0], A[1], A[2], A[3], A[4], A[5], A[6], A[7], A[8]);
+						cv::Mat matB = (cv::Mat_<double>(3, 1) << B[0], B[1], B[2]);
+						cv::Mat matX = cv::Mat_<double>(3, 1);
+
+						
+						bool solveResult =  cv::solve(matA, matB, matX, cv::DECOMP_SVD | cv::DECOMP_NORMAL);
+						
+						if (solveResult)
+						{
+							double realX = matX.at<double>(0, 0);
+							double realY = matX.at<double>(1, 0);
+							double realSigma = matX.at<double>(2, 0);
+
+							int realPos = (int)(realY * width + realX);
+							if (realPos < 0)
+								realPos = 0;
+							else if (realPos >= imgSize)
+								realPos = imgSize - 1;
+
+							imgMark[realPos] = 1;
+						}*/
+
+						imgMark[secondLine] = 1;
+					}
+					else
+					{
+						imgMark[secondLine] = 0;
+					}
+
+#elif
 					if ((pMid11 > pMid00) && (pMid11 > pMid01) && (pMid11 > pMid02) && (pMid11 > pMid10)
 						&& (pMid11 > pMid12) && (pMid11 > pMid20) && (pMid11 > pMid21) && (pMid11 > pMid22)
 						&& (pMid11 > pUp00) && (pMid11 > pUp01) && (pMid11 > pUp02) && (pMid11 > pUp10)
@@ -461,6 +502,8 @@ int height
 					{
 						imgMark[secondLine] = 0;
 					}
+
+#endif
 				}
 			}
 		}
@@ -497,7 +540,8 @@ int width,
 int height,
 int octaveNum,
 int layerNum,
-const int* hesTempl
+const int* hesTempl,
+double thresh
 )
 {
 	int fullSize = width * height;
@@ -520,7 +564,7 @@ const int* hesTempl
 	createIntImg(img, imgInt, width, height);
 
 	// Step 2: Generate the approximate guassin-derivate image
-	createHessinPyramid(img, imgInt, imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMarkTmp, width, height);
+	createHessinPyramid(img, imgInt, imgHesPyr, octaveNum, layerNum, g_hessin_template, imgMarkTmp, width, height, thresh);
 
 	// Display hessin pyramid images
 	//displayHessinPyramid(imgHesPyr, octaveNum, layerNum, width, height);

@@ -22,7 +22,7 @@ void *__cdecl calloc_check(size_t _NumOfElements, size_t _SizeOfElements) {
 }
 
 // Solve the 3X3 hessin
-void solve3_3(const double* A, const double* B, double* result)
+void solve3_3(const double* A, const double* B, double* X)
 {
 	double eps = 0.000001;
 
@@ -53,9 +53,9 @@ void solve3_3(const double* A, const double* B, double* result)
 	double y = (b1Comp - a12Comp * sigma) / (a11Comp + eps);
 	double x = (b1 - a13 * sigma - a12 * y) / (a11 + eps);
 
-	result[0] = x;
-	result[1] = y;
-	result[2] = sigma;
+	X[0] = x;
+	X[1] = y;
+	X[2] = sigma;
 }
 
 
@@ -83,7 +83,7 @@ int height
 
 	for (int y = 1; y < height; ++y)
 	{
-		int sum = 0;
+		double sum = 0;
 		imgIntPtr = imgInt + (y + 1) * (width + 1) + 1;
 
 		for (int x = 0; x < width; ++x, ++img, ++imgIntPtr)

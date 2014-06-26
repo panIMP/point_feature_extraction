@@ -27,9 +27,6 @@
     <ClInclude Include="zernike.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="hu.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="zernikeMatch.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -51,9 +48,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="zernike.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="hu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="zernikeMatch.cpp">

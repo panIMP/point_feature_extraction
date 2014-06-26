@@ -7,6 +7,9 @@
 #include <opencv2\calib3d\calib3d.hpp>
 
 
+#define _CIRCLR_NEIGHBOUR 1
+
+
 /*get the template to generate hessin pyramids*/
 int*
 getHessinTemplate(void);
@@ -35,7 +38,8 @@ int layerNum,
 const int* hesTempl,
 unsigned char* imgMark,
 int width,
-int height
+int height,
+double thresh
 );
 
 
@@ -89,5 +93,6 @@ int width,
 int height,
 int octaveNum,
 int layerNum,
-const int* hesTempl
+const int* hesTempl,
+double thresh
 );

@@ -64,7 +64,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="hu.h" />
     <ClInclude Include="huMatch.h" />
     <ClInclude Include="imageIO.h" />
     <ClInclude Include="pointLocate.h" />
@@ -73,7 +72,6 @@
     <ClInclude Include="zernike.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hu.cpp" />
     <ClCompile Include="huMatch.cpp" />
     <ClCompile Include="imageIO.cpp" />
     <ClCompile Include="main.cpp" />
